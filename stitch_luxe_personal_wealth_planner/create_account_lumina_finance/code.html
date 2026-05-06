@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up | Lumina Finance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fcf8fa",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "surface-container-high": "#eae7e9",
+                        "on-surface-variant": "#45464d",
+                        "on-secondary-container": "#006f66",
+                        "inverse-surface": "#303032",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-secondary-fixed": "#00201d",
+                        "primary": "#000000",
+                        "primary-container": "#131b2e",
+                        "on-surface": "#1b1b1d",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dcd9db",
+                        "tertiary-container": "#0b1c30",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "secondary-container": "#86f2e4",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "inverse-primary": "#bec6e0",
+                        "surface-variant": "#e4e2e4",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "secondary": "#006a61",
+                        "surface-container-low": "#f6f3f5",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-on-surface": "#f3f0f2",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0edef",
+                        "surface": "#fcf8fa",
+                        "outline": "#76777d",
+                        "on-secondary-fixed-variant": "#005049",
+                        "surface-bright": "#fcf8fa",
+                        "on-tertiary-container": "#75859d",
+                        "surface-container-highest": "#e4e2e4",
+                        "secondary-fixed": "#89f5e7",
+                        "tertiary": "#000000",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-background": "#1b1b1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "stack-gap": "16px",
+                        "container-padding": "24px",
+                        "gutter": "12px",
+                        "section-margin": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "label-sm": ["Work Sans"],
+                        "body-lg": ["Manrope"],
+                        "display-xl": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "label-xs": ["Work Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-xs": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .vibrant-teal-gradient {
+            background: linear-gradient(135deg, #006a61 0%, #008f82 100%);
+        }
+        .soft-elevation {
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex items-center justify-center p-0 md:p-6 lg:p-12">
+<!-- Auth Layout Wrapper -->
+<div class="w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest rounded-xl overflow-hidden soft-elevation border border-outline-variant/30">
+<!-- Left Side: Visual/Branding -->
+<div class="relative hidden md:flex flex-col justify-between p-12 bg-primary-container text-white overflow-hidden">
+<!-- Decorative Gradient Background -->
+<div class="absolute inset-0 z-0 opacity-40">
+<div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl"></div>
+<div class="absolute top-1/2 -left-24 w-80 h-80 rounded-full bg-tertiary-fixed/10 blur-3xl"></div>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-12">
+<div class="w-10 h-10 rounded-lg vibrant-teal-gradient flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+</div>
+<span class="font-headline-md text-headline-md font-bold tracking-tight">Lumina Finance</span>
+</div>
+<h1 class="font-display-xl text-display-xl leading-tight mb-6">Experience Financial Serenity</h1>
+<p class="font-body-lg text-body-lg text-on-primary-container max-w-md opacity-90">Join a community of professionals mastering their wealth with clarity and precision through our minimalist interface.</p>
+</div>
+<div class="relative z-10 mt-auto">
+<div class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+<div class="flex items-center gap-4 mb-4">
+<div class="flex -space-x-2">
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="A portrait of a professional business woman with a friendly smile, set against a soft blurred office background with warm morning light. The visual style is high-fidelity, corporate modern, reflecting the Lumina Finance brand colors of deep navy and teal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiJWt9szesBekK85vxCDpvPQidzQybER4gsRAK4X8YgGwf7_YQxpcjdQamg0c6spD2lTH_rg_gaRwrs36LR4339Uc-DiNzzyIxo2xTJenhOHHMecQ5QlqdMQ9Ca6f0xD3__i9L3qHhJL2MsKBnUG6_sxTdzHy3Kamx9w0zbUSDx9evyJ0TtXAvVPWAVzMLDsBex5FnTu8GgozZEgRblWPP3UoZ-zaY7D99KuRpfUrcbJWKkakQa7nWKUHgbENZ91QK1xWK0_hq2sA"/>
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="A portrait of a confident male executive in a smart casual blazer, looking directly into the camera with a neutral, professional expression. The lighting is soft and ambient, creating a sense of trust and authority consistent with the Lumina Finance aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU-AbuA6E0zepAz9vX5M972BnCz6NjWOP_SYUBh74z8BKys8pMM7M0Rva39SOY02lwwuR_0-GDuPGHWnbuzFj7JToBtAaf76ao2l7abKajd9UmLJ7dPN3hWjeGxLt89ORTkGNe7BdtJk9Ywbn4N94SPy1nf1vA_nrqny4nkOgAmAaWOUHPg81PyWgzoSuxFPu6D5ZlkfX6HYWD4GbmyJyStnSoZz2YWymzE4-6zeBUylbNYv1_u_6hye51AjAslZxTGgyQfmpKhuY"/>
+</div>
+<span class="font-label-xs text-label-xs uppercase tracking-widest text-secondary-fixed">Trusted by 10k+ users</span>
+</div>
+<p class="font-label-sm text-label-sm italic text-outline-variant">"Lumina transformed how I view my investments. The interface is quiet, capable, and truly serene."</p>
+</div>
+</div>
+<!-- Hero Image Background Overlay -->
+<div class="absolute inset-0 z-[-1] opacity-20 mix-blend-overlay">
+<img alt="Hero background" class="w-full h-full object-cover" data-alt="An abstract 3D visualization of financial growth, featuring translucent, flowing silk-like ribbons in teal and deep navy. The scene is illuminated by soft, volumetric light rays coming from the top right, creating a sense of forward momentum and serenity. Minimalist and high-end aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV8r1tjweTGkqxsVFkEOLVkS-WYWb0pp_eNePSTV5AGBe7m07PGNCo1zLfuwGlHY6uujgFtpUlc1ConhiXBVmUcvjx7reN0fOBwWXpxTzTeSmO3KJVee-MYT9rs-53l3I2KijPCTMKTO7IflzYzqHdVL359VttFQwyJHOooscgvRyCXxYxbs_Ps-mP8CDxcAgyEmvdmEk5J8-B1k21YMVnE8X9ipIXCmzxA_KaGfF8eO5Z0T8m22C8dh-KAt3wZno9alDyvU7SqJk"/>
+</div>
+</div>
+<!-- Right Side: Sign Up Form -->
+<div class="flex flex-col p-8 md:p-12 lg:p-16 justify-center bg-surface">
+<div class="max-w-md mx-auto w-full">
+<div class="mb-10 text-center md:text-left">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Create Account</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Your journey to financial clarity starts here.</p>
+</div>
+<form class="space-y-6">
+<!-- Display Name Field -->
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase ml-1" for="display-name">Display Name</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-secondary transition-colors">person</span>
+</div>
+<input class="w-full bg-transparent border-b-2 border-outline-variant focus:border-secondary focus:ring-0 pl-10 py-3 font-body-md text-on-surface transition-all placeholder:text-outline/50 outline-none" id="display-name" name="display-name" placeholder="John Doe" required="" type="text"/>
+</div>
+</div>
+<!-- Email Address Field -->
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase ml-1" for="email">Email Address</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-secondary transition-colors">mail</span>
+</div>
+<input class="w-full bg-transparent border-b-2 border-outline-variant focus:border-secondary focus:ring-0 pl-10 py-3 font-body-md text-on-surface transition-all placeholder:text-outline/50 outline-none" id="email" name="email" placeholder="name@company.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant uppercase ml-1" for="password">Password</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-secondary transition-colors">lock</span>
+</div>
+<input class="w-full bg-transparent border-b-2 border-outline-variant focus:border-secondary focus:ring-0 pl-10 py-3 font-body-md text-on-surface transition-all placeholder:text-outline/50 outline-none" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+<span class="material-symbols-outlined text-outline hover:text-on-surface transition-colors">visibility</span>
+</div>
+</div>
+</div>
+<!-- Terms and Stay Signed In -->
+<div class="flex items-center justify-between py-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer appearance-none w-5 h-5 border-2 border-outline-variant rounded-md checked:bg-secondary checked:border-secondary transition-all cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-white opacity-0 peer-checked:opacity-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[16px] pointer-events-none" style="font-variation-settings: 'FILL' 0, 'wght' 600;">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Stay signed in</span>
+</label>
+</div>
+<!-- Action Button -->
+<div class="pt-4">
+<button class="w-full vibrant-teal-gradient text-white py-4 px-6 rounded-lg font-headline-md text-headline-md shadow-lg active:scale-[0.98] transition-all hover:brightness-110 flex items-center justify-center gap-2 group" type="submit">
+                            Start Journey
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Divider -->
+<div class="my-10 flex items-center gap-4">
+<div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-widest">Or social join</span>
+<div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+</div>
+<!-- Social Links -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-outline-variant/50 hover:bg-surface-container-low transition-colors font-label-sm text-label-sm">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArM6RpWzv-9AKQVXZ0vev9-i2LFfnhKz_4fjTe5-WGRpS8GOuuCQyZG2jDHBplCbehSOcElro3sUGQkiN4UlidqtmbeNPgAh7G7_nVpwhIJxCW_r1_k4Kw160MHUhYhW_VT1kLdwyZBO6C9-iAC215jRGbt8DUXr3MgnmATOXzqAtCsO2aBQOiw40AUNrr_iK9TaKWi1Pht5h3SRQWov2piNHghK_geNcuR7WrmlEikJ8cG3xHY0BgE6HSgnUP7f7q6MMGHwcB1a8"/>
+                        Google
+                    </button>
+<button class="flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-outline-variant/50 hover:bg-surface-container-low transition-colors font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-on-surface">ios</span>
+                        Apple
+                    </button>
+</div>
+<!-- Footer Link -->
+<p class="mt-12 text-center font-body-md text-body-md text-on-surface-variant">
+                    Already have an account? 
+                    <a class="text-secondary font-bold hover:underline underline-offset-4 ml-1" href="#">Log In</a>
+</p>
+</div>
+</div>
+</div>
+</body></html>

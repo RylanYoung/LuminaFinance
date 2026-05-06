@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#75859d",
+                        "on-primary-fixed": "#131b2e",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-primary": "#bec6e0",
+                        "inverse-surface": "#303032",
+                        "surface-dim": "#dcd9db",
+                        "primary": "#000000",
+                        "tertiary-fixed": "#d3e4fe",
+                        "outline": "#76777d",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f6f3f5",
+                        "secondary": "#006a61",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#0b1c30",
+                        "on-primary-container": "#7c839b",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e4e2e4",
+                        "surface-container": "#f0edef",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e4e2e4",
+                        "on-secondary-container": "#006f66",
+                        "on-secondary-fixed-variant": "#005049",
+                        "inverse-on-surface": "#f3f0f2",
+                        "surface": "#fcf8fa",
+                        "on-surface-variant": "#45464d",
+                        "background": "#fcf8fa",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-container": "#86f2e4",
+                        "primary-container": "#131b2e",
+                        "on-background": "#1b1b1d",
+                        "surface-container-high": "#eae7e9",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "tertiary": "#000000",
+                        "surface-bright": "#fcf8fa",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "secondary-fixed": "#89f5e7",
+                        "on-surface": "#1b1b1d",
+                        "primary-fixed": "#dae2fd",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#0b1c30"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "16px",
+                        "container-padding": "24px",
+                        "section-margin": "32px",
+                        "unit": "4px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-xs": ["Work Sans"],
+                        "label-sm": ["Work Sans"],
+                        "display-xl": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-xs": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "label-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "display-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fcf8fa;
+            color: #1b1b1d;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-container-padding h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-headline-lg text-headline-lg font-bold text-secondary">Lumina Finance</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container border-none rounded-full pl-10 pr-4 py-2 text-label-sm w-64 focus:ring-2 focus:ring-secondary/20 outline-none" placeholder="Search transactions..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-secondary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-secondary">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a financial advisor in a modern, light-filled office. The individual wears a clean white shirt and conveys a sense of approachable authority and serene confidence. High-key natural lighting and a soft-minimalist background emphasize the premium Lumina Finance aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTriB-bjx22mHSKlqlggPvcaW_KxAsHKbtlyrXsyP1bBgny6F0OLWGn5lueOg_WfkLcJavfJeF88c4iYvVkPfsLnn4TY-4z_dGnQ1GvUWxh7U4osRzLjox91QXTwouxJ2DxutFpTmvMLHuMVKEj25M0ejMteLHmXpK9lptPvCw_Er6e1Ovgrl62MquOCbzFcjkcitbQ0mB5Y9Gnv_KDLBIFN1P_h0bGzyOySIKAvAt8mJ3Z5bUnzP__pWFsDgov2M9P3oMp9dhz0I"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Sidebar Navigation -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-surface shadow-md pt-20 hidden md:block">
+<div class="flex flex-col h-full p-gutter gap-2">
+<!-- Nav Items -->
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm">Transactions</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Investments</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="track_changes">track_changes</span>
+<span class="font-label-sm text-label-sm">Budgets</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-sm text-label-sm">Reports</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+<div class="mt-auto pb-8 px-4">
+<button class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-label-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    Add Transaction
+                </button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-24 px-container-padding pb-section-margin max-w-7xl mx-auto">
+<header class="mb-section-margin">
+<h1 class="font-display-xl text-display-xl text-primary mb-2">Transaction Ledger</h1>
+<p class="text-on-surface-variant font-body-lg">Manage your financial flow with precision and clarity.</p>
+</header>
+<!-- Transaction Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-section-margin items-start">
+<!-- Expenses Column (Left) -->
+<section class="flex flex-col gap-stack-gap">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-error" data-icon="arrow_outward">arrow_outward</span>
+                        Expenses
+                    </h2>
+<span class="text-label-sm bg-error-container text-on-error-container px-3 py-1 rounded-full">-$12,450.00</span>
+</div>
+<!-- Quick Log: Expenses -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm mb-4">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant mb-4 uppercase tracking-widest">Quick Log Expense</h3>
+<div class="flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="font-label-xs text-label-xs text-on-surface-variant mb-1 block">Description</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary focus:ring-0 transition-all py-2 text-body-md outline-none" placeholder="e.g. Whole Foods" type="text"/>
+</div>
+<div>
+<label class="font-label-xs text-label-xs text-on-surface-variant mb-1 block">Amount</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary focus:ring-0 transition-all py-2 text-body-md outline-none" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-grow">
+<label class="font-label-xs text-label-xs text-on-surface-variant mb-1 block">Category</label>
+<select class="w-full bg-transparent border-b border-outline focus:border-secondary focus:ring-0 transition-all py-2 text-body-md outline-none">
+<option>Groceries</option>
+<option>Rent</option>
+<option>Utilities</option>
+<option>Entertainment</option>
+</select>
+</div>
+<div class="flex items-end">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-sm active:scale-95 transition-all">Record</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Expense List -->
+<div class="space-y-3">
+<!-- Transaction Row 1 -->
+<div class="bg-white p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<div class="font-label-sm text-body-md text-primary">Apple Store Retail</div>
+<div class="text-label-xs text-on-surface-variant">Oct 24, 2024 • Tech &amp; Gadgets</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-primary">-$1,299.00</div>
+<div class="text-label-xs text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full inline-block">Verified</div>
+</div>
+</div>
+<!-- Transaction Row 2 -->
+<div class="bg-white p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<div class="font-label-sm text-body-md text-primary">Le Bernardin Dining</div>
+<div class="text-label-xs text-on-surface-variant">Oct 22, 2024 • Entertainment</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-primary">-$485.20</div>
+<div class="text-label-xs text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full inline-block">Business</div>
+</div>
+</div>
+<!-- Transaction Row 3 -->
+<div class="bg-white p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</div>
+<div>
+<div class="font-label-sm text-body-md text-primary">Skyline Management</div>
+<div class="text-label-xs text-on-surface-variant">Oct 01, 2024 • Rent</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-primary">-$4,200.00</div>
+<div class="text-label-xs text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full inline-block">Recurring</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Income Column (Right) -->
+<section class="flex flex-col gap-stack-gap">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-secondary" data-icon="south_west">south_west</span>
+                        Income
+                    </h2>
+<span class="text-label-sm bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full">+$28,750.00</span>
+</div>
+<!-- Quick Log: Income -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm mb-4">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant mb-4 uppercase tracking-widest">Quick Log Income</h3>
+<div class="flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="font-label-xs text-label-xs text-on-surface-variant mb-1 block">Source</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary focus:ring-0 transition-all py-2 text-body-md outline-none" placeholder="e.g. Client X Payout" type="text"/>
+</div>
+<div>
+<label class="font-label-xs text-label-xs text-on-surface-variant mb-1 block">Amount</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary focus:ring-0 transition-all py-2 text-body-md outline-none" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-grow">
+<label class="font-label-xs text-label-xs text-on-surface-variant mb-1 block">Category</label>
+<select class="w-full bg-transparent border-b border-outline focus:border-secondary focus:ring-0 transition-all py-2 text-body-md outline-none">
+<option>Salary</option>
+<option>Dividends</option>
+<option>Freelance</option>
+<option>Bonus</option>
+</select>
+</div>
+<div class="flex items-end">
+<button class="bg-secondary text-on-secondary px-6 py-2 rounded-lg font-label-sm active:scale-95 transition-all">Record</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Income List -->
+<div class="space-y-3">
+<!-- Income Row 1 -->
+<div class="bg-white p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div>
+<div class="font-label-sm text-body-md text-primary">Tech Corp Monthly Salary</div>
+<div class="text-label-xs text-on-surface-variant">Oct 30, 2024 • Salary</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-secondary">+$18,500.00</div>
+<div class="text-label-xs text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full inline-block">Recurring</div>
+</div>
+</div>
+<!-- Income Row 2 -->
+<div class="bg-white p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="show_chart">show_chart</span>
+</div>
+<div>
+<div class="font-label-sm text-body-md text-primary">Vanguard S&amp;P 500 Div</div>
+<div class="text-label-xs text-on-surface-variant">Oct 15, 2024 • Dividends</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-secondary">+$2,240.15</div>
+<div class="text-label-xs text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full inline-block">Automated</div>
+</div>
+</div>
+<!-- Income Row 3 -->
+<div class="bg-white p-4 rounded-lg border border-outline-variant flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+</div>
+<div>
+<div class="font-label-sm text-body-md text-primary">Consulting Payout - Apollo</div>
+<div class="text-label-xs text-on-surface-variant">Oct 05, 2024 • Freelance</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-secondary">+$8,000.00</div>
+<div class="text-label-xs text-on-secondary-container bg-secondary-container/30 px-2 py-0.5 rounded-full inline-block">Contract</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Expense Trends Summary (Bento Style) -->
+<div class="mt-section-margin grid grid-cols-1 md:grid-cols-3 gap-stack-gap">
+<div class="md:col-span-2 bg-primary-container p-8 rounded-2xl relative overflow-hidden text-on-primary">
+<div class="relative z-10">
+<h3 class="font-headline-lg text-headline-lg mb-4">Financial Momentum</h3>
+<p class="font-body-lg text-on-primary-container max-w-md">Your savings rate this month is 56.8%. You're pacing $3,400 ahead of your quarterly wealth accumulation target.</p>
+</div>
+<div class="absolute right-0 top-0 w-1/3 h-full opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-6 rounded-2xl flex flex-col justify-center text-center">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-2">Net Cash Flow</span>
+<span class="font-display-xl text-display-xl text-secondary">+$16,300.00</span>
+<span class="text-label-sm text-secondary flex items-center justify-center gap-1 mt-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span>
+                    12% from last month
+                </span>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-section-margin bg-surface-container-low">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding py-8 gap-4 w-full max-w-7xl mx-auto">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm font-bold text-secondary">Lumina Finance</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">© 2024 Lumina Finance. Professional Wealth Management.</span>
+</div>
+<div class="flex gap-8">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Security</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

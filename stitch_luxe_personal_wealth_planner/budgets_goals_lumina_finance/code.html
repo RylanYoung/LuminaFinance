@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Budgets &amp; Goals | Lumina Finance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#565e74",
+                    "on-tertiary-container": "#75859d",
+                    "on-primary-fixed": "#131b2e",
+                    "outline-variant": "#c6c6cd",
+                    "inverse-primary": "#bec6e0",
+                    "inverse-surface": "#303032",
+                    "surface-dim": "#dcd9db",
+                    "primary": "#000000",
+                    "tertiary-fixed": "#d3e4fe",
+                    "outline": "#76777d",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f6f3f5",
+                    "secondary": "#006a61",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#0b1c30",
+                    "on-primary-container": "#7c839b",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e4e2e4",
+                    "surface-container": "#f0edef",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e4e2e4",
+                    "on-secondary-container": "#006f66",
+                    "on-secondary-fixed-variant": "#005049",
+                    "inverse-on-surface": "#f3f0f2",
+                    "surface": "#fcf8fa",
+                    "on-surface-variant": "#45464d",
+                    "background": "#fcf8fa",
+                    "on-secondary-fixed": "#00201d",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "primary-fixed-dim": "#bec6e0",
+                    "secondary-container": "#86f2e4",
+                    "primary-container": "#131b2e",
+                    "on-background": "#1b1b1d",
+                    "surface-container-high": "#eae7e9",
+                    "secondary-fixed-dim": "#6bd8cb",
+                    "tertiary": "#000000",
+                    "surface-bright": "#fcf8fa",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "secondary-fixed": "#89f5e7",
+                    "on-surface": "#1b1b1d",
+                    "primary-fixed": "#dae2fd",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#0b1c30"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "16px",
+                    "container-padding": "24px",
+                    "section-margin": "32px",
+                    "unit": "4px",
+                    "gutter": "12px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "label-xs": ["Work Sans"],
+                    "label-sm": ["Work Sans"],
+                    "display-xl": ["Manrope"],
+                    "body-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-xs": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "display-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .teal-gradient {
+        background: linear-gradient(135deg, #006a61 0%, #00a395 100%);
+      }
+      .surface-card {
+        background-color: #ffffff;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm h-16 flex items-center">
+<div class="flex justify-between items-center px-container-padding w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<span class="font-headline-lg text-headline-lg font-bold text-secondary">Lumina Finance</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center gap-stack-gap">
+<span class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer font-label-sm text-label-sm">Dashboard</span>
+<span class="text-secondary border-b-2 border-secondary pb-1 font-label-sm text-label-sm">Budgets</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">help_outline</span>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full object-cover" data-alt="A professional portrait of a successful financial advisor with a kind and trustworthy expression. The lighting is bright and airy, reflecting a modern corporate aesthetic. The background is a blurred high-end office interior with glass walls and minimalist furniture, using a clean color palette of whites and soft teals." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3DroD7BAW_l9F3DLjBftJo4enWsBu1vihCAEk47LPXUjPZ7tQCIbCO3K1QX7tO0O2rAvvfc1X0i0WJTfWzoTWZeYW76BZbN_9ZJXW0WSCMbqUztta3y53pOs0aL9AX6vs8hbEiocAlnbWqrUpcwuax-HSHYmE0N_ecy70GhLnUxSHlR2Ta59jZxwkwdZ46J4sfSQoYZW_8U6hUEWqAlnT-cPTbIajW2VlWuL4RzswqwEamHzthcseKZSUpx_sUbu2RxqK3g2NB2E"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface shadow-md hidden lg:block">
+<div class="flex flex-col h-full p-gutter gap-2">
+<div class="py-8 px-4 flex flex-col gap-1">
+<span class="font-headline-md text-headline-md font-bold text-secondary">Lumina Finance</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Financial Serenity</span>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+                    Transactions
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+                    Investments
+                </a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-3 font-label-sm text-label-sm shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">track_changes</span>
+                    Budgets
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">insights</span>
+                    Reports
+                </a>
+<a class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg font-label-sm text-label-sm" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+<button class="mt-auto mb-gutter teal-gradient text-white px-4 py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform font-label-sm text-label-sm">
+<span class="material-symbols-outlined">add</span>
+                Add Transaction
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="max-w-7xl mx-auto px-container-padding py-section-margin">
+<!-- Page Header -->
+<div class="mb-section-margin">
+<h1 class="font-display-xl text-display-xl text-on-surface mb-2">Budgets &amp; Goals</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Create focused savings goals and monitor your financial progress with serene clarity.</p>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+<!-- Goals Creation Section (Left/Top) -->
+<section class="xl:col-span-4 space-y-8">
+<div class="surface-card rounded-2xl p-6">
+<div class="flex items-center gap-2 mb-6 text-secondary">
+<span class="material-symbols-outlined">add_circle</span>
+<h2 class="font-headline-md text-headline-md">New Savings Goal</h2>
+</div>
+<form class="space-y-6">
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant">GOAL NAME</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-secondary py-2 placeholder:text-surface-variant transition-colors" placeholder="e.g., Summer Yacht Trip" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant">TARGET AMOUNT</label>
+<div class="relative">
+<span class="absolute left-0 top-2 text-on-surface-variant">$</span>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-secondary py-2 pl-4 placeholder:text-surface-variant transition-colors" placeholder="5,000" type="number"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant">DUE DATE</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-secondary py-2 placeholder:text-surface-variant transition-colors" type="date"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs text-on-surface-variant">CONTRIBUTION FREQUENCY</label>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 py-2 px-4 rounded-lg border border-secondary bg-secondary-container text-on-secondary-container font-label-sm text-label-sm" type="button">Weekly</button>
+<button class="flex-1 py-2 px-4 rounded-lg border border-outline-variant text-on-surface-variant hover:border-secondary transition-colors font-label-sm text-label-sm" type="button">Monthly</button>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center">
+                                    You'll need to save <span class="font-bold text-secondary">$125.00</span> per week to reach this goal.
+                                </p>
+</div>
+<button class="w-full teal-gradient text-white py-4 rounded-xl shadow-lg active:scale-95 transition-all font-headline-md text-headline-md flex items-center justify-center gap-2" type="button">
+                                Create Goal
+                            </button>
+</form>
+</div>
+<div class="surface-card rounded-2xl overflow-hidden relative group">
+<img alt="Financial success illustration" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A macro photograph of a crystal-clear water drop reflecting a pristine, minimalist architectural structure. The scene is bathed in soft, diffused morning light, emphasizing purity and precision. The color palette is dominated by serene teals and clean whites, creating a sense of calm financial mastery and growth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUEYMRuRxHiOLqbXYb4ojnpQyryKNlr3uJV-fXzaQuan2PZSxEYOIUhWDPhJbC5oDRPG5fkT0fu2cFoEqxpqodZwMkmXHcxNcGCAYL_Y7nw-EHERqZOjp4XX4ABRsr76cFscv4VK6fe0AfR4kmW9T6y6Rsum4OoP5QBbpPi8YY94LUXm6ZQr_v3n_AY3wjNlzg9uHGUSQP3_mvxvfYbwl4YQmUxZLJzbxWMwX9WlGy4KC9syZjGkHR7YbOeABH7-smYApoBLr0GBc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent p-6 flex flex-col justify-end">
+<h3 class="text-white font-headline-md text-headline-md">Premium Insights</h3>
+<p class="text-white/80 font-label-sm text-label-sm">Unlock predictive analysis for your savings journey.</p>
+</div>
+</div>
+</section>
+<!-- Active Goals Grid (Right/Bottom) -->
+<section class="xl:col-span-8 space-y-gutter">
+<div class="flex justify-between items-end mb-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Active Goals</h2>
+<span class="text-secondary font-label-sm text-label-sm cursor-pointer hover:underline">View Archived</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-gap">
+<!-- Goal Card 1 -->
+<div class="surface-card rounded-2xl p-6 flex flex-col justify-between h-64">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container/30 rounded-xl text-secondary">
+<span class="material-symbols-outlined">home</span>
+</div>
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full font-label-xs text-label-xs">ON TRACK</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">New Home Downpayment</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Due Sept 2025 • Monthly</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-headline-lg text-headline-lg text-secondary">$84,000 <span class="text-label-sm text-on-surface-variant font-normal">/ $120,000</span></span>
+<span class="font-label-sm text-label-sm text-secondary">70%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full teal-gradient rounded-full" style="width: 70%"></div>
+</div>
+</div>
+</div>
+<!-- Goal Card 2 -->
+<div class="surface-card rounded-2xl p-6 flex flex-col justify-between h-64">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-on-tertiary-container/10 rounded-xl text-on-tertiary-container">
+<span class="material-symbols-outlined">flight</span>
+</div>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full font-label-xs text-label-xs">STEADY</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">European Sabbatical</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Due July 2024 • Weekly</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-headline-lg text-headline-lg text-secondary">$12,450 <span class="text-label-sm text-on-surface-variant font-normal">/ $15,000</span></span>
+<span class="font-label-sm text-label-sm text-secondary">83%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full teal-gradient rounded-full" style="width: 83%"></div>
+</div>
+</div>
+</div>
+<!-- Goal Card 3 -->
+<div class="surface-card rounded-2xl p-6 flex flex-col justify-between h-64">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container/30 rounded-xl text-secondary">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full font-label-xs text-label-xs">ON TRACK</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Electric SUV Fund</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Due Jan 2025 • Monthly</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="font-headline-lg text-headline-lg text-secondary">$32,000 <span class="text-label-sm text-on-surface-variant font-normal">/ $65,000</span></span>
+<span class="font-label-sm text-label-sm text-secondary">49%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full teal-gradient rounded-full" style="width: 49%"></div>
+</div>
+</div>
+</div>
+<!-- Add Goal Placeholder -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-6 flex flex-col items-center justify-center gap-4 group cursor-pointer hover:border-secondary transition-colors h-64 bg-surface-container-lowest">
+<div class="p-4 rounded-full bg-surface-container group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary">add</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-secondary">Create Another Goal</span>
+</div>
+</div>
+<!-- Visual Summary Section -->
+<div class="surface-card rounded-2xl p-8 mt-8 bg-gradient-to-br from-surface to-surface-container-low">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="space-y-2 text-center md:text-left">
+<h3 class="font-headline-md text-headline-md text-on-surface">Total Progress</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Across all active savings goals</p>
+</div>
+<div class="flex items-center gap-12">
+<div class="text-center">
+<div class="font-display-xl text-display-xl text-secondary">$128,450</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">SAVED</div>
+</div>
+<div class="h-12 w-px bg-outline-variant"></div>
+<div class="text-center">
+<div class="font-display-xl text-display-xl text-on-surface-variant">$200,000</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">TARGET</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="lg:pl-64 w-full mt-section-margin bg-surface-container-low border-t border-outline-variant/10">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding py-8 gap-4 w-full max-w-7xl mx-auto">
+<span class="font-label-sm text-label-sm font-bold text-secondary">Lumina Finance</span>
+<div class="flex gap-6">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Security</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Support</a>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant">© 2024 Lumina Finance. Professional Wealth Management.</span>
+</div>
+</footer>
+</body></html>

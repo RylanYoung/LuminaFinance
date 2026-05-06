@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-tint": "#565e74",
+            "on-tertiary-container": "#75859d",
+            "on-primary-fixed": "#131b2e",
+            "outline-variant": "#c6c6cd",
+            "inverse-primary": "#bec6e0",
+            "inverse-surface": "#303032",
+            "surface-dim": "#dcd9db",
+            "primary": "#000000",
+            "tertiary-fixed": "#d3e4fe",
+            "outline": "#76777d",
+            "on-error-container": "#93000a",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f6f3f5",
+            "secondary": "#006a61",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#0b1c30",
+            "on-primary-container": "#7c839b",
+            "error-container": "#ffdad6",
+            "surface-container-highest": "#e4e2e4",
+            "surface-container": "#f0edef",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e4e2e4",
+            "on-secondary-container": "#006f66",
+            "on-secondary-fixed-variant": "#005049",
+            "inverse-on-surface": "#f3f0f2",
+            "surface": "#fcf8fa",
+            "on-surface-variant": "#45464d",
+            "background": "#fcf8fa",
+            "on-secondary-fixed": "#00201d",
+            "tertiary-fixed-dim": "#b7c8e1",
+            "primary-fixed-dim": "#bec6e0",
+            "secondary-container": "#86f2e4",
+            "primary-container": "#131b2e",
+            "on-background": "#1b1b1d",
+            "surface-container-high": "#eae7e9",
+            "secondary-fixed-dim": "#6bd8cb",
+            "tertiary": "#000000",
+            "surface-bright": "#fcf8fa",
+            "on-tertiary-fixed-variant": "#38485d",
+            "secondary-fixed": "#89f5e7",
+            "on-surface": "#1b1b1d",
+            "primary-fixed": "#dae2fd",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed-variant": "#3f465c",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#0b1c30"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "stack-gap": "16px",
+            "container-padding": "24px",
+            "section-margin": "32px",
+            "unit": "4px",
+            "gutter": "12px"
+          },
+          "fontFamily": {
+            "headline-md": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "body-lg": ["Manrope"],
+            "label-xs": ["Work Sans"],
+            "label-sm": ["Work Sans"],
+            "display-xl": ["Manrope"],
+            "body-md": ["Manrope"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "label-xs": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "label-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+            "display-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Side Navigation Bar -->
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant flex-col p-gutter gap-2 z-50">
+<div class="flex flex-col gap-1 px-4 py-6 mb-4">
+<h1 class="font-headline-md text-headline-md font-bold text-secondary">Lumina Finance</h1>
+<p class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">Financial Serenity</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high transition-all px-4 py-3 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high transition-all px-4 py-3 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm">Transactions</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high transition-all px-4 py-3 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="show_chart">show_chart</span>
+<span class="font-label-sm text-label-sm">Investments</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high transition-all px-4 py-3 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="track_changes">track_changes</span>
+<span class="font-label-sm text-label-sm">Budgets</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high transition-all px-4 py-3 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="insights">insights</span>
+<span class="font-label-sm text-label-sm">Reports</span>
+</a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container px-4 py-3 rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-sm text-label-sm font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 py-6 border-t border-outline-variant/30">
+<button class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-secondary to-on-secondary-container text-on-secondary font-label-sm py-3 rounded-xl shadow-md hover:shadow-lg active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+        Add Transaction
+      </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 h-16 bg-surface/80 backdrop-blur-md z-40 border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-container-padding">
+<h2 class="font-headline-md text-headline-md text-secondary">Settings</h2>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<input class="bg-surface-container border-none rounded-full px-10 py-2 text-label-sm w-64 focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Search insights..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]" data-icon="search">search</span>
+</div>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile avatar" data-alt="Close-up portrait of a professional male with a kind expression, wearing a navy blazer in a high-end corporate setting. The lighting is soft and flattering, emphasizing a mood of calm competence and professional serenity. The background is a slightly blurred modern office with warm wooden tones and glass surfaces, fitting the financial serenity aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBULj-oxj0e9-J9fGNJdsGpHsuri18jSgPJMure5I7RMnFTlOvHmMrBNxbzCS5nRzO6X76-mOsjqH75uR7Y4a1z-0sOwTF9dIBCSX3wztPBG7_YkseUquq67ghVjm7dcFP56sHcS-utmx0cnC8_AA_PxVLh6dYZqc4FVLlpONCon-I-mkq9NeGbwTS1YvCmCT1E8J2BeB5Q4-ZrB8USkBUFm2uKqthZpAw4gLDAD-7eDfZqqjr9vBMcWmnPyGLq3rqV3gsZggPMvgQ"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="mt-16 p-container-padding max-w-6xl mx-auto w-full">
+<!-- Asymmetric Bento Layout for Settings -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Left Column: Profile & Accounts -->
+<div class="md:col-span-7 flex flex-col gap-section-margin">
+<!-- Profile Section Card -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)] border border-outline-variant/30">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="person">person</span>
+                Profile Information
+              </h3>
+<button class="text-secondary font-label-sm hover:underline">Edit Details</button>
+</div>
+<div class="flex flex-col sm:flex-row gap-8 items-start sm:items-center">
+<div class="relative group cursor-pointer">
+<img class="w-24 h-24 rounded-2xl object-cover border-4 border-surface shadow-md" data-alt="A clean, professional portrait of a executive in a bright, minimalist office space. The lighting is natural and airy, creating a sense of clarity and focus. The palette is dominated by soft whites and cool greys with a focused, professional atmosphere suitable for a wealth management dashboard profile section." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlEM5o8jPiB_2C6z8WKdDnlvwFTPzB-jY-Vr26AnAyCgTnw30jz6RsS4F64WD5_kmnM-v--1U9yAKHf2rijDR3rqubt5XJjpin4J7quUMLc7aKWwkL1ReoCtHg51ZxwbNJeqbg4zrO8Xx_9aBqPoEYPHBwgCqBWBxYxdnGlp5rj64xA3gsPhBxEmlLGpa4lPPEX-Xz6QNVj8NGlyBfs9IfFuScuBVl1CP34ycRGJ98kwxa7ZpsNtChJArcwHo3PqzmqJVR8wZthd4"/>
+<div class="absolute inset-0 bg-black/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="photo_camera">photo_camera</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 flex-1 w-full">
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1">Full Name</p>
+<p class="font-body-md font-semibold">Julian Sterling</p>
+</div>
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1">Email Address</p>
+<p class="font-body-md font-semibold">j.sterling@lumina.io</p>
+</div>
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1">Membership</p>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container text-on-secondary-container">
+                    Lumina Elite
+                  </span>
+</div>
+<div>
+<p class="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1">Timezone</p>
+<p class="font-body-md font-semibold">GMT -5 (EST)</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Connections Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)] border border-outline-variant/30">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="account_balance">account_balance</span>
+                Connected Institutions
+              </h3>
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="link">link</span>
+                Connect New
+              </button>
+</div>
+<div class="space-y-4">
+<!-- Account Item -->
+<div class="flex items-center justify-between p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<p class="font-label-sm font-bold">Chase Premier Checking</p>
+<p class="text-[12px] text-on-surface-variant">Last synced: 12 minutes ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded uppercase tracking-wider">Active</span>
+<button class="p-1 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Account Item -->
+<div class="flex items-center justify-between p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined" data-icon="show_chart" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+</div>
+<div>
+<p class="font-label-sm font-bold">Vanguard Brokerage</p>
+<p class="text-[12px] text-on-surface-variant">Last synced: 2 hours ago</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded uppercase tracking-wider">Active</span>
+<button class="p-1 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Manual Account -->
+<div class="flex items-center justify-between p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20 border-dashed">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+</div>
+<div>
+<p class="font-label-sm font-bold">Real Estate (Manual)</p>
+<p class="text-[12px] text-on-surface-variant">Self-reported value: $450,000</p>
+</div>
+</div>
+<button class="text-secondary font-label-xs hover:underline">Update</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Security & Privacy -->
+<div class="md:col-span-5 flex flex-col gap-section-margin">
+<!-- Security Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)] border border-outline-variant/30">
+<h3 class="font-headline-md text-headline-md mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="shield">shield</span>
+              Security &amp; Access
+            </h3>
+<div class="space-y-8">
+<!-- Password Reset -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<p class="font-label-sm font-bold">Account Password</p>
+<span class="text-[11px] text-on-surface-variant">Updated 3 months ago</span>
+</div>
+<button class="w-full border border-outline-variant text-on-surface-variant py-2.5 rounded-lg font-label-sm hover:bg-surface transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="lock_reset">lock_reset</span>
+                  Change Password
+                </button>
+</div>
+<!-- 2FA -->
+<div class="p-4 rounded-xl bg-secondary/5 border border-secondary/20">
+<div class="flex items-start gap-4">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary" data-icon="security" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<p class="font-label-sm font-bold">Two-Factor Authentication</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<p class="text-label-xs text-on-surface-variant mt-1 leading-relaxed">
+                      Securing your account with Google Authenticator or SMS codes.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Login History -->
+<div>
+<p class="font-label-sm font-bold mb-4">Active Sessions</p>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant" data-icon="laptop_mac">laptop_mac</span>
+<div class="flex-1">
+<p class="text-[12px] font-semibold">MacBook Pro · New York, USA</p>
+<p class="text-[11px] text-on-surface-variant">Current Session</p>
+</div>
+</div>
+<div class="flex items-center gap-3 opacity-60">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant" data-icon="smartphone">smartphone</span>
+<div class="flex-1">
+<p class="text-[12px] font-semibold">iPhone 15 Pro · Miami, USA</p>
+<p class="text-[11px] text-on-surface-variant">Yesterday, 10:45 PM</p>
+</div>
+</div>
+</div>
+<button class="mt-6 text-error font-label-xs hover:underline">Log out from all other devices</button>
+</div>
+</div>
+</section>
+<!-- Preferences Card -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)] border border-outline-variant/30 flex-1">
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="tune">tune</span>
+              Global Preferences
+            </h3>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-sm font-bold">Currency</p>
+<p class="text-label-xs text-on-surface-variant">Primary display currency</p>
+</div>
+<select class="bg-surface-container border-none rounded-lg text-label-sm py-1.5 focus:ring-secondary">
+<option>USD ($)</option>
+<option>EUR (€)</option>
+<option>GBP (£)</option>
+</select>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-sm font-bold">Push Notifications</p>
+<p class="text-label-xs text-on-surface-variant">Transaction alerts &amp; reports</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto w-full bg-surface-container-low border-t border-outline-variant/30">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-container-padding py-8 gap-4 w-full">
+<div class="flex flex-col items-center md:items-start">
+<p class="font-label-sm text-label-sm font-bold text-secondary">Lumina Finance</p>
+<p class="font-label-xs text-label-xs text-on-surface-variant">© 2024 Lumina Finance. Professional Wealth Management.</p>
+</div>
+<nav class="flex gap-6">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Security</a>
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-secondary transition-colors" href="#">Support</a>
+</nav>
+</div>
+</footer>
+</main>
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-outline-variant/30 h-16 flex items-center justify-around px-2 z-50">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-[10px] font-medium">History</span>
+</a>
+<button class="-mt-8 w-12 h-12 bg-secondary text-on-secondary rounded-full shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="text-[10px] font-medium">Stats</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-secondary" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="text-[10px] font-bold">Settings</span>
+</a>
+</nav>
+</body></html>
