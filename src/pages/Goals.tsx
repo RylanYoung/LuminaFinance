@@ -40,7 +40,52 @@ export default function Goals() {
           </p>
         </div>
 
-        {/* Income goal — shown first */}
+        {/* Net worth goal — first */}
+        <div className="teal-gradient rounded-2xl p-6 text-white shadow-ambient">
+          <p className="text-white/70 font-label-xs text-label-xs uppercase tracking-widest mb-1">Net Worth Goal</p>
+          {nwGoal && nwGoal.targetAmount > 0 ? (
+            <>
+              <div className="flex items-end justify-between mb-3">
+                <div>
+                  <p className="font-display-xl text-display-xl tabular-nums">
+                    {sym}{totalNetWorth.toLocaleString()}
+                  </p>
+                  <p className="text-white/70 font-label-xs text-label-xs mt-1">
+                    of {sym}{nwGoal.targetAmount.toLocaleString()} goal
+                    {nwGoal.targetDate ? ` · by ${nwGoal.targetDate}` : ''}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-white font-headline-lg text-headline-lg font-bold">
+                    {nwPct!.toFixed(1)}%
+                  </p>
+                  <p className="text-white/70 font-label-xs text-label-xs">there</p>
+                </div>
+              </div>
+              <div className="w-full bg-white/20 rounded-full h-3">
+                <div
+                  className="bg-white rounded-full h-3 transition-all duration-1000"
+                  style={{ width: `${nwPct}%` }}
+                />
+              </div>
+              <p className="text-white/60 font-label-xs text-label-xs mt-2">
+                {sym}{(nwGoal.targetAmount - totalNetWorth).toLocaleString()} remaining
+              </p>
+            </>
+          ) : (
+            <div className="flex items-center justify-between">
+              <p className="text-white/70 font-body-md text-body-md">No net worth goal set yet</p>
+              <button
+                onClick={() => navigate('/settings')}
+                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-label-sm text-label-sm transition-all active:scale-95"
+              >
+                Set Goal
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Income goal — second */}
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
           <div className="flex items-center gap-2 mb-4">
             <span className="material-symbols-outlined text-[20px] text-secondary">payments</span>
@@ -105,51 +150,6 @@ export default function Goals() {
                 className="font-label-sm text-label-sm text-secondary hover:underline"
               >
                 Set Goal →
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Net worth goal */}
-        <div className="teal-gradient rounded-2xl p-6 text-white shadow-ambient">
-          <p className="text-white/70 font-label-xs text-label-xs uppercase tracking-widest mb-1">Net Worth Goal</p>
-          {nwGoal && nwGoal.targetAmount > 0 ? (
-            <>
-              <div className="flex items-end justify-between mb-3">
-                <div>
-                  <p className="font-display-xl text-display-xl tabular-nums">
-                    {sym}{totalNetWorth.toLocaleString()}
-                  </p>
-                  <p className="text-white/70 font-label-xs text-label-xs mt-1">
-                    of {sym}{nwGoal.targetAmount.toLocaleString()} goal
-                    {nwGoal.targetDate ? ` · by ${nwGoal.targetDate}` : ''}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-white font-headline-lg text-headline-lg font-bold">
-                    {nwPct!.toFixed(1)}%
-                  </p>
-                  <p className="text-white/70 font-label-xs text-label-xs">there</p>
-                </div>
-              </div>
-              <div className="w-full bg-white/20 rounded-full h-3">
-                <div
-                  className="bg-white rounded-full h-3 transition-all duration-1000"
-                  style={{ width: `${nwPct}%` }}
-                />
-              </div>
-              <p className="text-white/60 font-label-xs text-label-xs mt-2">
-                {sym}{(nwGoal.targetAmount - totalNetWorth).toLocaleString()} remaining
-              </p>
-            </>
-          ) : (
-            <div className="flex items-center justify-between">
-              <p className="text-white/70 font-body-md text-body-md">No net worth goal set yet</p>
-              <button
-                onClick={() => navigate('/settings')}
-                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-label-sm text-label-sm transition-all active:scale-95"
-              >
-                Set Goal
               </button>
             </div>
           )}
