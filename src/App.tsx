@@ -10,6 +10,7 @@ import Portfolio from './pages/Portfolio'
 import Income from './pages/Income'
 import Budget from './pages/Budget'
 import Reports from './pages/Reports'
+import Goals from './pages/Goals'
 import Settings from './pages/Settings'
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/income" element={<Income />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/goals" element={<Goals />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<Navigate to={getSession() ? '/dashboard' : '/login'} replace />} />

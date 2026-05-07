@@ -4,12 +4,13 @@ import { useState } from 'react'
 import ToastContainer from './ToastContainer'
 
 const NAV = [
-  { icon: 'dashboard',         label: 'Dashboard', to: '/dashboard' },
-  { icon: 'account_balance',   label: 'Portfolio',  to: '/portfolio' },
-  { icon: 'payments',          label: 'Income',     to: '/income' },
-  { icon: 'pie_chart',         label: 'Budget',     to: '/budget' },
-  { icon: 'insights',          label: 'Reports',    to: '/reports' },
-  { icon: 'settings',          label: 'Settings',   to: '/settings' },
+  { icon: 'dashboard',       label: 'Dashboard', to: '/dashboard' },
+  { icon: 'account_balance', label: 'Portfolio',  to: '/portfolio' },
+  { icon: 'flag',            label: 'Goals',      to: '/goals' },
+  { icon: 'payments',        label: 'Income',     to: '/income' },
+  { icon: 'pie_chart',       label: 'Budget',     to: '/budget' },
+  { icon: 'insights',        label: 'Reports',    to: '/reports' },
+  { icon: 'settings',        label: 'Settings',   to: '/settings' },
 ]
 
 export default function Layout() {
