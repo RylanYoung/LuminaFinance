@@ -1,42 +1,42 @@
-export interface Transaction {
+export type AssetType = 'stocks' | 'etf' | 'crypto' | 'real_estate' | 'savings' | 'super'
+
+export interface AssetHistoryEntry {
+  date: string  // YYYY-MM-DD
+  value: number
+}
+
+export interface AssetAccount {
   id: string
-  amount: number
-  type: 'income' | 'expense'
-  categoryId: string
-  description: string
-  date: string // YYYY-MM-DD
+  name: string
+  type: AssetType
+  currentValue: number
+  goalValue?: number
   notes?: string
-  isRecurringTemplate?: boolean
-  recurringFrequency?: 'monthly' | 'weekly'
-  recurringDay?: number // day of month (1-31) for monthly; 0-6 (Sun-Sat) for weekly
-  recurringSourceId?: string
+  lastUpdated: string
+  history: AssetHistoryEntry[]
 }
 
-export interface Category {
+export interface IncomeProfile {
+  type: 'salary' | 'monthly'
+  monthlyAmount: number
+  yearlyAmount: number
+  monthlyGoal?: number
+  yearlyGoal?: number
+  history: { date: string; monthlyAmount: number }[]
+}
+
+export interface BudgetCategory {
   id: string
   name: string
-  icon: string
-  color: string // hex
-  type: 'income' | 'expense' | 'both'
-  isDefault?: boolean
-}
-
-export interface Budget {
-  id: string
-  categoryId: string
-  amount: number
-  period: 'monthly'
-}
-
-export interface Goal {
-  id: string
-  name: string
-  targetAmount: number
-  currentAmount: number
-  targetDate: string // YYYY-MM-DD
   icon: string
   color: string
-  createdAt: string
+  monthlyBudget: number
+  monthlySpent: number
+}
+
+export interface NetWorthGoal {
+  targetAmount: number
+  targetDate?: string
 }
 
 export interface AppSettings {
