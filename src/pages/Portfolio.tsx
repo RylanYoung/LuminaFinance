@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { getSession } from '../auth/session'
 import {
   getAssets, addAsset, updateAsset, deleteAsset,
-  ASSET_META, ASSET_ORDER, getTotalNetWorth,
+  ASSET_META, ASSET_ORDER,
 } from '../store/assets'
 import { getSettings } from '../store/settings'
 import { useToast } from '../hooks/useToast'
