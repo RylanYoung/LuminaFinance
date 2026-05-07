@@ -1,37 +1,27 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { clearSession, getSession } from '../auth/session'
-import { processRecurring } from '../store/recurring'
-import { useEffect, useState } from 'react'
-import { useToast } from '../hooks/useToast'
+import { useState } from 'react'
 import ToastContainer from './ToastContainer'
 
 const NAV = [
-  { icon: 'dashboard', label: 'Dashboard', to: '/dashboard' },
-  { icon: 'receipt_long', label: 'Transactions', to: '/transactions' },
-  { icon: 'account_balance_wallet', label: 'Investments', to: '/investments' },
-  { icon: 'track_changes', label: 'Budgets', to: '/budgets' },
-  { icon: 'insights', label: 'Reports', to: '/reports' },
-  { icon: 'category', label: 'Categories', to: '/categories' },
-  { icon: 'settings', label: 'Settings', to: '/settings' },
+  { icon: 'dashboard',         label: 'Dashboard', to: '/dashboard' },
+  { icon: 'account_balance',   label: 'Portfolio',  to: '/portfolio' },
+  { icon: 'payments',          label: 'Income',     to: '/income' },
+  { icon: 'pie_chart',         label: 'Budget',     to: '/budget' },
+  { icon: 'insights',          label: 'Reports',    to: '/reports' },
+  { icon: 'settings',          label: 'Settings',   to: '/settings' },
 ]
 
 export default function Layout() {
   const navigate = useNavigate()
-  const { toast } = useToast()
   const session = getSession()!
   const [mobileOpen, setMobileOpen] = useState(false)
-
-  useEffect(() => {
-    const count = processRecurring(session.userId)
-    if (count > 0) {
-      toast.info(`${count} recurring transaction${count > 1 ? 's' : ''} generated for this month`)
-    }
-  }, [])
 
   function handleLogout() {
     clearSession()
     navigate('/login', { replace: true })
   }
+
 
   const sidebar = (
     <aside className="flex flex-col h-full bg-surface border-r border-outline-variant/30">

@@ -1,124 +1,201 @@
-import { useState, useEffect } from 'react'
 import { getSession } from '../auth/session'
-import { getTransactions } from '../store/transactions'
-import { getCategories } from '../store/categories'
-import { formatCurrency } from '../utils'
+import { getNetWorthHistory, getTotalByType, ASSET_META, ASSET_ORDER } from '../store/assets'
+import { getIncome } from '../store/income'
+import { getBudgetCategories, getTotalMonthlyExpenses } from '../store/budget'
+import { getSettings } from '../store/settings'
 import PageTransition from '../components/PageTransition'
-import EmptyState from '../components/EmptyState'
-import type { Transaction, Category } from '../store/types'
 
-// ---- SVG Bar Chart ----
-function BarChart({ data }: { data: { label: string; income: number; expense: number }[] }) {
-  const [animated, setAnimated] = useState(false)
-  useEffect(() => { const id = setTimeout(() => setAnimated(true), 100); return () => clearTimeout(id) }, [])
+// ---- SVG Line Chart ----
+function LineChart({
+  data,
+  sym,
+  color = '#006a61',
+}: {
+  data: { date: string; value: number }[]
+  sym: string
+  color?: string
+}) {
+  if (data.length < 2) {
+    return (
+      <div className="flex items-center justify-center h-48 text-on-surface-variant font-label-sm text-label-sm">
+        Not enough history yet — update asset values over multiple days to see growth
+      </div>
+    )
+  }
 
-  const maxVal = Math.max(...data.flatMap(d => [d.income, d.expense]), 1)
-  const W = 600; const H = 220; const barW = 18; const gap = 8
-  const groupW = barW * 2 + gap + 20
-  const padL = 60; const padB = 36; const chartH = H - padB - 16
+  const W = 600
+  const H = 180
+  const PAD = { top: 16, right: 16, bottom: 32, left: 60 }
+  const chartW = W - PAD.left - PAD.right
+  const chartH = H - PAD.top - PAD.bottom
+
+  const values = data.map(d => d.value)
+  const minV = Math.min(...values)
+  const maxV = Math.max(...values)
+  const rangeV = maxV - minV || 1
+
+  function xOf(i: number) {
+    return PAD.left + (i / (data.length - 1)) * chartW
+  }
+  function yOf(v: number) {
+    return PAD.top + chartH - ((v - minV) / rangeV) * chartH
+  }
+
+  const pathD = data
+    .map((d, i) => `${i === 0 ? 'M' : 'L'}${xOf(i).toFixed(1)},${yOf(d.value).toFixed(1)}`)
+    .join(' ')
+
+  const areaD =
+    pathD +
+    ` L${xOf(data.length - 1).toFixed(1)},${(PAD.top + chartH).toFixed(1)}` +
+    ` L${PAD.left.toFixed(1)},${(PAD.top + chartH).toFixed(1)} Z`
+
+  function fmtK(v: number) {
+    if (Math.abs(v) >= 1_000_000) return `${sym}${(v / 1_000_000).toFixed(1)}M`
+    if (Math.abs(v) >= 1_000) return `${sym}${(v / 1_000).toFixed(0)}K`
+    return `${sym}${Math.round(v)}`
+  }
+
+  const yTicks = 4
+  const yLabels = Array.from({ length: yTicks + 1 }, (_, i) => {
+    const v = minV + (rangeV / yTicks) * i
+    return { v, y: yOf(v) }
+  })
+
+  const xStep = Math.max(1, Math.floor(data.length / 5))
+  const xLabels = data
+    .filter((_, i) => i % xStep === 0 || i === data.length - 1)
+    .map(d => ({
+      label: d.date.slice(5),
+      x: xOf(data.indexOf(d)),
+    }))
+
+  const uid = `lg-${Math.random().toString(36).slice(2, 7)}`
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ fontFamily: 'Work Sans, sans-serif' }}>
-      {/* Y grid */}
-      {[0, 0.25, 0.5, 0.75, 1].map(f => {
-        const y = 16 + chartH * (1 - f)
-        return (
-          <g key={f}>
-            <line x1={padL} y1={y} x2={W - 16} y2={y} stroke="#c6c6cd" strokeWidth="0.5" strokeDasharray="4 4" />
-            <text x={padL - 8} y={y + 4} textAnchor="end" fontSize="10" fill="#76777d">
-              {f === 0 ? '' : `$${((maxVal * f) / 1000).toFixed(0)}k`}
-            </text>
-          </g>
-        )
-      })}
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 180 }}>
+      <defs>
+        <linearGradient id={uid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
 
-      {data.map((d, i) => {
-        const x = padL + i * groupW
-        const iH = animated ? (d.income / maxVal) * chartH : 0
-        const eH = animated ? (d.expense / maxVal) * chartH : 0
-        return (
-          <g key={d.label}>
-            {/* Income bar */}
-            <rect x={x} y={16 + chartH - iH} width={barW} height={iH} fill="#006a61" rx="3"
-              style={{ transition: 'height 1s cubic-bezier(0.4,0,0.2,1), y 1s cubic-bezier(0.4,0,0.2,1)' }} />
-            {/* Expense bar */}
-            <rect x={x + barW + gap} y={16 + chartH - eH} width={barW} height={eH} fill="#131b2e" rx="3"
-              style={{ transition: 'height 1s cubic-bezier(0.4,0,0.2,1), y 1s cubic-bezier(0.4,0,0.2,1)' }} />
-            <text x={x + barW} y={H - 8} textAnchor="middle" fontSize="10" fill="#76777d">{d.label}</text>
-          </g>
-        )
-      })}
+      {/* Grid lines */}
+      {yLabels.map(({ y }, i) => (
+        <line key={i} x1={PAD.left} y1={y} x2={W - PAD.right} y2={y}
+          stroke="#e4e2e4" strokeWidth="1" strokeDasharray="4 3" />
+      ))}
 
-      {/* Legend */}
-      <rect x={padL} y={2} width={12} height={10} fill="#006a61" rx="2" />
-      <text x={padL + 16} y={11} fontSize="11" fill="#45464d">Income</text>
-      <rect x={padL + 80} y={2} width={12} height={10} fill="#131b2e" rx="2" />
-      <text x={padL + 96} y={11} fontSize="11" fill="#45464d">Expenses</text>
+      {/* Area fill */}
+      <path d={areaD} fill={`url(#${uid})`} />
+
+      {/* Line */}
+      <path d={pathD} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* Y axis labels */}
+      {yLabels.map(({ v, y }, i) => (
+        <text key={i} x={PAD.left - 6} y={y + 4} textAnchor="end"
+          className="fill-on-surface-variant" style={{ fontSize: 10, fontFamily: 'Work Sans, sans-serif' }}>
+          {fmtK(v)}
+        </text>
+      ))}
+
+      {/* X axis labels */}
+      {xLabels.map(({ label, x }, i) => (
+        <text key={i} x={x} y={H - 4} textAnchor="middle"
+          className="fill-on-surface-variant" style={{ fontSize: 10, fontFamily: 'Work Sans, sans-serif' }}>
+          {label}
+        </text>
+      ))}
+
+      {/* Last point dot */}
+      <circle
+        cx={xOf(data.length - 1)}
+        cy={yOf(data[data.length - 1].value)}
+        r="4" fill={color} stroke="white" strokeWidth="2"
+      />
     </svg>
   )
 }
 
 // ---- SVG Donut Chart ----
-function DonutChart({ slices }: { slices: { label: string; value: number; color: string }[] }) {
-  const [animated, setAnimated] = useState(false)
-  useEffect(() => {
-    const id = setTimeout(() => setAnimated(true), 200)
-    return () => clearTimeout(id)
-  }, [slices])
-
+function DonutChart({
+  slices,
+  sym,
+}: {
+  slices: { label: string; value: number; color: string }[]
+  sym: string
+}) {
   const total = slices.reduce((s, sl) => s + sl.value, 0)
-  if (total === 0) return null
+  if (total === 0) {
+    return (
+      <div className="flex items-center justify-center h-48 text-on-surface-variant font-label-sm text-label-sm">
+        No asset data yet
+      </div>
+    )
+  }
 
-  const R = 70; const cx = 90; const cy = 90; const stroke = 32
+  const R = 70
+  const CX = 90
+  const CY = 90
+  const strokeWidth = 28
+
   let cumAngle = -90
+  const arcs = slices
+    .filter(sl => sl.value > 0)
+    .map(sl => {
+      const angle = (sl.value / total) * 360
+      const start = cumAngle
+      cumAngle += angle
+      return { ...sl, startAngle: start, sweepAngle: angle }
+    })
 
-  const paths = slices.map(sl => {
-    const frac = sl.value / total
-    const startAngle = cumAngle
-    cumAngle += frac * 360
-    const endAngle = cumAngle
-    const r = R
-    const toRad = (deg: number) => (deg * Math.PI) / 180
-    const x1 = cx + r * Math.cos(toRad(startAngle))
-    const y1 = cy + r * Math.sin(toRad(startAngle))
-    const x2 = cx + r * Math.cos(toRad(endAngle))
-    const y2 = cy + r * Math.sin(toRad(endAngle))
-    const largeArc = frac > 0.5 ? 1 : 0
-    const circumference = 2 * Math.PI * r
-    const dashLen = animated ? circumference * frac : 0
-    return { ...sl, frac, x1, y1, x2, y2, largeArc, circumference, dashLen, startAngle, endAngle }
-  })
+  function polarToXY(angle: number, r: number) {
+    const rad = (angle * Math.PI) / 180
+    return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) }
+  }
+
+  function arcPath(startAngle: number, sweepAngle: number) {
+    const clamp = Math.min(sweepAngle, 359.99)
+    const start = polarToXY(startAngle, R)
+    const end = polarToXY(startAngle + clamp, R)
+    const large = clamp > 180 ? 1 : 0
+    return `M ${start.x} ${start.y} A ${R} ${R} 0 ${large} 1 ${end.x} ${end.y}`
+  }
 
   return (
-    <div className="flex flex-col md:flex-row items-center gap-8">
+    <div className="flex flex-col sm:flex-row items-center gap-6">
       <svg viewBox="0 0 180 180" className="w-44 h-44 shrink-0">
-        {paths.map((p, i) => (
-          <path key={i}
-            d={`M ${cx} ${cy} L ${p.x1} ${p.y1} A ${R} ${R} 0 ${p.largeArc} 1 ${p.x2} ${p.y2} Z`}
-            fill={p.color}
-            opacity={animated ? 1 : 0}
-            style={{ transition: `opacity 0.6s ease ${i * 0.1}s` }}
+        {arcs.map((arc, i) => (
+          <path
+            key={i}
+            d={arcPath(arc.startAngle, arc.sweepAngle)}
+            fill="none"
+            stroke={arc.color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="butt"
           />
         ))}
-        <circle cx={cx} cy={cy} r={R - stroke} fill="white" />
-        <text x={cx} y={cy - 6} textAnchor="middle" fontSize="13" fontWeight="700" fill="#1b1b1d">
-          {slices.length}
+        <text x={CX} y={CY - 8} textAnchor="middle" className="fill-on-surface-variant" style={{ fontSize: 10 }}>
+          Total
         </text>
-        <text x={cx} y={cy + 10} textAnchor="middle" fontSize="10" fill="#76777d">categories</text>
+        <text x={CX} y={CY + 8} textAnchor="middle" className="fill-on-surface" style={{ fontSize: 13, fontWeight: 700 }}>
+          {sym}{total >= 1_000_000 ? `${(total / 1_000_000).toFixed(1)}M` : total >= 1000 ? `${(total / 1000).toFixed(0)}K` : total.toLocaleString()}
+        </text>
       </svg>
-      <div className="flex flex-col gap-2 flex-1 min-w-0">
-        {slices.map((sl, i) => (
-          <div key={i} className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: sl.color }} />
-              <span className="font-label-sm text-label-sm text-on-surface truncate">{sl.label}</span>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="font-label-xs text-label-xs text-on-surface-variant">
-                {total > 0 ? Math.round((sl.value / total) * 100) : 0}%
-              </span>
-              <span className="font-label-sm text-label-sm text-on-surface font-semibold w-24 text-right">{formatCurrency(sl.value)}</span>
-            </div>
+
+      <div className="flex-1 grid grid-cols-1 gap-2 w-full">
+        {arcs.map((arc, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: arc.color }} />
+            <span className="font-label-xs text-label-xs text-on-surface-variant flex-1">{arc.label}</span>
+            <span className="font-label-xs text-label-xs text-on-surface tabular-nums">
+              {sym}{arc.value >= 1000 ? `${(arc.value / 1000).toFixed(1)}K` : arc.value.toLocaleString()}
+            </span>
+            <span className="font-label-xs text-label-xs text-on-surface-variant tabular-nums w-10 text-right">
+              {((arc.value / total) * 100).toFixed(1)}%
+            </span>
           </div>
         ))}
       </div>
@@ -126,256 +203,223 @@ function DonutChart({ slices }: { slices: { label: string; value: number; color:
   )
 }
 
-// ---- Line Chart ----
-function LineChart({ data }: { data: { label: string; value: number }[] }) {
-  const [animated, setAnimated] = useState(false)
-  useEffect(() => { const id = setTimeout(() => setAnimated(true), 100); return () => clearTimeout(id) }, [])
+// ---- Budget bar chart ----
+function BudgetBars({
+  categories,
+  sym,
+}: {
+  categories: { name: string; color: string; icon: string; monthlyBudget: number; monthlySpent: number }[]
+  sym: string
+}) {
+  const active = categories.filter(c => c.monthlyBudget > 0 || c.monthlySpent > 0)
+  if (active.length === 0) {
+    return (
+      <div className="text-center py-8 text-on-surface-variant font-label-sm text-label-sm">
+        No budget data yet
+      </div>
+    )
+  }
 
-  if (data.length < 2) return null
-  const W = 600; const H = 160; const padL = 56; const padB = 32; const padR = 16
-  const chartW = W - padL - padR; const chartH = H - padB - 16
-  const maxVal = Math.max(...data.map(d => d.value), 1)
-  const minVal = Math.min(...data.map(d => Math.min(d.value, 0)))
-  const range = maxVal - minVal || 1
-
-  const pts = data.map((d, i) => ({
-    x: padL + (i / (data.length - 1)) * chartW,
-    y: 16 + chartH - ((d.value - minVal) / range) * chartH,
-  }))
-
-  const pathD = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
-  const areaD = `${pathD} L ${pts[pts.length - 1].x} ${H - padB} L ${pts[0].x} ${H - padB} Z`
+  const maxVal = Math.max(...active.map(c => Math.max(c.monthlyBudget, c.monthlySpent)), 1)
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ fontFamily: 'Work Sans, sans-serif' }}>
-      <defs>
-        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#006a61" stopOpacity="0.2" />
-          <stop offset="100%" stopColor="#006a61" stopOpacity="0.01" />
-        </linearGradient>
-        <clipPath id="lineClip">
-          <rect x={padL} y={0} width={animated ? chartW : 0} height={H}
-            style={{ transition: 'width 1.2s cubic-bezier(0.4,0,0.2,1)' }} />
-        </clipPath>
-      </defs>
-      {[0, 0.5, 1].map(f => {
-        const y = 16 + chartH * (1 - f)
-        const val = minVal + range * f
+    <div className="space-y-4">
+      {active.map(cat => {
+        const spentPct = (cat.monthlySpent / maxVal) * 100
+        const budgetPct = (cat.monthlyBudget / maxVal) * 100
+        const over = cat.monthlyBudget > 0 && cat.monthlySpent > cat.monthlyBudget
         return (
-          <g key={f}>
-            <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="#c6c6cd" strokeWidth="0.5" strokeDasharray="4 4" />
-            <text x={padL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="#76777d">
-              {val >= 0 ? `$${(val / 1000).toFixed(0)}k` : `-$${(Math.abs(val) / 1000).toFixed(0)}k`}
-            </text>
-          </g>
+          <div key={cat.name}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[16px]" style={{ color: cat.color }}>
+                  {cat.icon}
+                </span>
+                <span className="font-label-xs text-label-xs text-on-surface">{cat.name}</span>
+              </div>
+              <span className={`font-label-xs text-label-xs tabular-nums ${over ? 'text-error' : 'text-on-surface-variant'}`}>
+                {sym}{cat.monthlySpent.toLocaleString()}
+                {cat.monthlyBudget > 0 && ` / ${sym}${cat.monthlyBudget.toLocaleString()}`}
+              </span>
+            </div>
+            <div className="relative h-4 bg-surface-container-high rounded-full overflow-hidden">
+              {cat.monthlyBudget > 0 && (
+                <div
+                  className="absolute top-0 left-0 h-full rounded-full opacity-30 transition-all duration-700"
+                  style={{ width: `${budgetPct}%`, backgroundColor: cat.color }}
+                />
+              )}
+              <div
+                className="absolute top-0 left-0 h-full rounded-full transition-all duration-700"
+                style={{ width: `${spentPct}%`, backgroundColor: over ? '#ba1a1a' : cat.color }}
+              />
+            </div>
+          </div>
         )
       })}
-      <g clipPath="url(#lineClip)">
-        <path d={areaD} fill="url(#lineGrad)" />
-        <path d={pathD} fill="none" stroke="#006a61" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        {pts.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="4" fill="white" stroke="#006a61" strokeWidth="2" />
-        ))}
-      </g>
-      {data.map((d, i) => (
-        <text key={i} x={pts[i].x} y={H - 8} textAnchor="middle" fontSize="10" fill="#76777d">{d.label}</text>
-      ))}
-    </svg>
+    </div>
   )
 }
 
-// ---- Main page ----
-type Range = 'this-month' | 'last-month' | 'last-3' | 'this-year' | 'all'
-
 export default function Reports() {
   const session = getSession()!
-  const [range, setRange] = useState<Range>('this-month')
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
+  const settings = getSettings(session.userId)
+  const sym = settings.currencySymbol
 
-  useEffect(() => {
-    setTransactions(getTransactions(session.userId))
-    setCategories(getCategories(session.userId))
-  }, [])
+  const history = getNetWorthHistory(session.userId)
+  const byType = getTotalByType(session.userId)
+  const income = getIncome(session.userId)
+  const categories = getBudgetCategories(session.userId)
+  const totalSpent = getTotalMonthlyExpenses(session.userId)
 
-  function getDateRange(): { start: Date; end: Date } {
-    const now = new Date()
-    if (range === 'this-month') return { start: new Date(now.getFullYear(), now.getMonth(), 1), end: now }
-    if (range === 'last-month') {
-      const s = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-      const e = new Date(now.getFullYear(), now.getMonth(), 0)
-      return { start: s, end: e }
-    }
-    if (range === 'last-3') return { start: new Date(now.getFullYear(), now.getMonth() - 2, 1), end: now }
-    if (range === 'this-year') return { start: new Date(now.getFullYear(), 0, 1), end: now }
-    return { start: new Date(2000, 0, 1), end: now }
-  }
+  const donutSlices = ASSET_ORDER
+    .map(type => ({
+      label: ASSET_META[type].label,
+      value: byType[type],
+      color: ASSET_META[type].color,
+    }))
+    .filter(s => s.value > 0)
 
-  const { start, end } = getDateRange()
-  const filtered = transactions.filter(t => {
-    const d = new Date(t.date + 'T00:00:00')
-    return d >= start && d <= end
-  })
+  const netWorthChange = history.length >= 2
+    ? history[history.length - 1].value - history[0].value
+    : 0
 
-  const income = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0)
-  const expenses = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)
-  const net = income - expenses
-  const txCount = filtered.length
-
-  // Monthly bar chart data (last 6 months)
-  const barData = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date()
-    d.setMonth(d.getMonth() - (5 - i))
-    const yr = d.getFullYear(); const mo = d.getMonth()
-    const monthTx = transactions.filter(t => {
-      const td = new Date(t.date + 'T00:00:00')
-      return td.getFullYear() === yr && td.getMonth() === mo
-    })
-    return {
-      label: d.toLocaleString('default', { month: 'short' }),
-      income: monthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0),
-      expense: monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0),
-    }
-  })
-
-  // Category spending donut
-  const catMap = new Map<string, number>()
-  filtered.filter(t => t.type === 'expense').forEach(t => {
-    catMap.set(t.categoryId, (catMap.get(t.categoryId) ?? 0) + t.amount)
-  })
-  const catSlices = [...catMap.entries()]
-    .map(([id, value]) => {
-      const cat = categories.find(c => c.id === id)
-      return { label: cat?.name ?? 'Other', value, color: cat?.color ?? '#9CA3AF' }
-    })
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 8)
-
-  // Net worth line chart (cumulative by month, last 6 months)
-  let cumulative = 0
-  const lineData = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date()
-    d.setMonth(d.getMonth() - (5 - i))
-    const yr = d.getFullYear(); const mo = d.getMonth()
-    const monthTx = transactions.filter(t => {
-      const td = new Date(t.date + 'T00:00:00')
-      return td.getFullYear() === yr && td.getMonth() === mo
-    })
-    const monthNet = monthTx.reduce((s, t) => s + (t.type === 'income' ? t.amount : -t.amount), 0)
-    cumulative += monthNet
-    return { label: d.toLocaleString('default', { month: 'short' }), value: cumulative }
-  })
-
-  const RANGES: [Range, string][] = [
-    ['this-month', 'This Month'],
-    ['last-month', 'Last Month'],
-    ['last-3', 'Last 3 Months'],
-    ['this-year', 'This Year'],
-    ['all', 'All Time'],
-  ]
+  const currentNetWorth = history.length > 0 ? history[history.length - 1].value : 0
 
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-6xl mx-auto space-y-section-margin">
+      <div className="p-container-padding max-w-5xl mx-auto pb-12 space-y-section-margin">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-          <div>
-            <h2 className="font-headline-lg text-headline-lg text-on-surface">Financial Reports</h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">Insights into your financial health</p>
+        <div className="pt-2">
+          <h2 className="font-headline-lg text-headline-lg text-on-surface">Reports</h2>
+          <p className="font-body-md text-body-md text-on-surface-variant">
+            Track your financial growth over time
+          </p>
+        </div>
+
+        {/* Summary stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-gutter">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-ambient">
+            <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Net Worth</p>
+            <p className="font-headline-md text-headline-md text-on-surface font-bold tabular-nums">
+              {sym}{currentNetWorth.toLocaleString()}
+            </p>
           </div>
-          {/* Range selector */}
-          <div className="flex gap-1 p-1 bg-surface-container rounded-xl overflow-x-auto">
-            {RANGES.map(([val, label]) => (
-              <button key={val} onClick={() => setRange(val)}
-                className={`px-3 py-2 rounded-lg font-label-xs text-label-xs whitespace-nowrap transition-all active:scale-95 ${
-                  range === val ? 'bg-surface-container-lowest shadow-sm text-on-surface font-semibold' : 'text-on-surface-variant hover:text-on-surface'
-                }`}>{label}</button>
-            ))}
+          <div className={`border rounded-xl p-4 shadow-ambient ${
+            netWorthChange >= 0 ? 'bg-secondary/10 border-secondary/30' : 'bg-error-container border-error/30'
+          }`}>
+            <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">
+              Growth {history.length >= 2 ? `(${history.length} updates)` : ''}
+            </p>
+            <p className={`font-headline-md text-headline-md font-bold tabular-nums ${
+              netWorthChange >= 0 ? 'text-secondary' : 'text-error'
+            }`}>
+              {netWorthChange >= 0 ? '+' : ''}{sym}{netWorthChange.toLocaleString()}
+            </p>
+          </div>
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-ambient">
+            <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Monthly Income</p>
+            <p className="font-headline-md text-headline-md text-secondary font-bold tabular-nums">
+              {sym}{income.monthlyAmount.toLocaleString()}
+            </p>
+          </div>
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-ambient">
+            <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Monthly Expenses</p>
+            <p className="font-headline-md text-headline-md text-on-surface font-bold tabular-nums">
+              {sym}{totalSpent.toLocaleString()}
+            </p>
           </div>
         </div>
 
-        {transactions.length === 0 ? (
-          <EmptyState icon="insights" title="No data yet"
-            description="Add transactions to start seeing financial reports and insights" />
-        ) : (
-          <>
-            {/* KPI row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-              {[
-                { label: 'Total Income', value: formatCurrency(income), color: 'text-secondary', icon: 'arrow_downward' },
-                { label: 'Total Expenses', value: formatCurrency(expenses), color: 'text-error', icon: 'arrow_upward' },
-                { label: 'Net Income', value: `${net >= 0 ? '+' : ''}${formatCurrency(net)}`, color: net >= 0 ? 'text-secondary' : 'text-error', icon: 'account_balance' },
-                { label: 'Transactions', value: txCount.toString(), color: 'text-on-surface', icon: 'receipt_long' },
-              ].map(k => (
-                <div key={k.label} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-ambient">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`material-symbols-outlined text-[16px] ${k.color}`}>{k.icon}</span>
-                    <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">{k.label}</p>
-                  </div>
-                  <p className={`font-headline-lg text-headline-lg font-bold ${k.color}`}>{k.value}</p>
-                </div>
-              ))}
+        {/* Net worth growth chart */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
+          <h3 className="font-headline-md text-headline-md text-on-surface mb-4">Net Worth Over Time</h3>
+          <LineChart data={history} sym={sym} color="#006a61" />
+        </div>
+
+        {/* Asset allocation donut */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
+          <h3 className="font-headline-md text-headline-md text-on-surface mb-4">Asset Allocation</h3>
+          <DonutChart slices={donutSlices} sym={sym} />
+        </div>
+
+        {/* Budget breakdown */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h3 className="font-headline-md text-headline-md text-on-surface">Monthly Budget Breakdown</h3>
+              <p className="font-label-xs text-label-xs text-on-surface-variant mt-0.5">
+                Spent vs budgeted per category
+              </p>
             </div>
-
-            {/* Monthly bar chart */}
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
-              <h3 className="font-headline-md text-headline-md text-on-surface mb-1">Monthly Overview</h3>
-              <p className="font-label-xs text-label-xs text-on-surface-variant mb-6">Income vs expenses over the last 6 months</p>
-              <BarChart data={barData} />
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-              {/* Category breakdown */}
-              <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
-                <h3 className="font-headline-md text-headline-md text-on-surface mb-1">Spending by Category</h3>
-                <p className="font-label-xs text-label-xs text-on-surface-variant mb-6">Where your money is going</p>
-                {catSlices.length > 0 ? (
-                  <DonutChart slices={catSlices} />
-                ) : (
-                  <p className="font-body-md text-body-md text-on-surface-variant text-center py-8">No expense data in this period</p>
-                )}
-              </div>
-
-              {/* Net worth trend */}
-              <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
-                <h3 className="font-headline-md text-headline-md text-on-surface mb-1">Net Worth Trend</h3>
-                <p className="font-label-xs text-label-xs text-on-surface-variant mb-6">Cumulative net over 6 months</p>
-                <LineChart data={lineData} />
-              </div>
-            </div>
-
-            {/* Top spending categories table */}
-            {catSlices.length > 0 && (
-              <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
-                <h3 className="font-headline-md text-headline-md text-on-surface mb-4">Top Spending Categories</h3>
-                <div className="space-y-3">
-                  {catSlices.map((sl, i) => {
-                    const pct = expenses > 0 ? (sl.value / expenses) * 100 : 0
-                    return (
-                      <div key={sl.label} className="flex items-center gap-4">
-                        <span className="font-label-xs text-label-xs text-on-surface-variant w-4 text-right">{i + 1}</span>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: sl.color }} />
-                              <span className="font-label-sm text-label-sm text-on-surface">{sl.label}</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="font-label-xs text-label-xs text-on-surface-variant">{pct.toFixed(1)}%</span>
-                              <span className="font-label-sm text-label-sm text-on-surface font-semibold w-24 text-right">{formatCurrency(sl.value)}</span>
-                            </div>
-                          </div>
-                          <div className="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
-                            <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${pct}%`, backgroundColor: sl.color }} />
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
+            {income.monthlyAmount > 0 && (
+              <div className="text-right">
+                <p className="font-label-xs text-label-xs text-on-surface-variant">Savings rate</p>
+                <p className={`font-headline-md text-headline-md font-bold ${
+                  income.monthlyAmount > totalSpent ? 'text-secondary' : 'text-error'
+                }`}>
+                  {income.monthlyAmount > 0
+                    ? Math.max(0, Math.round(((income.monthlyAmount - totalSpent) / income.monthlyAmount) * 100))
+                    : 0}%
+                </p>
               </div>
             )}
-          </>
+          </div>
+          <BudgetBars categories={categories} sym={sym} />
+        </div>
+
+        {/* Income vs Expenses card */}
+        {income.monthlyAmount > 0 && (
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
+            <h3 className="font-headline-md text-headline-md text-on-surface mb-4">Income vs Expenses</h3>
+
+            <div className="space-y-3">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-label-xs text-label-xs text-on-surface-variant">Income</span>
+                  <span className="font-label-xs text-label-xs text-secondary tabular-nums">
+                    {sym}{income.monthlyAmount.toLocaleString()}
+                  </span>
+                </div>
+                <div className="h-6 bg-secondary/20 rounded-lg overflow-hidden">
+                  <div className="h-full teal-gradient rounded-lg" style={{ width: '100%' }} />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-label-xs text-label-xs text-on-surface-variant">Expenses</span>
+                  <span className={`font-label-xs text-label-xs tabular-nums ${
+                    totalSpent > income.monthlyAmount ? 'text-error' : 'text-on-surface'
+                  }`}>
+                    {sym}{totalSpent.toLocaleString()}
+                  </span>
+                </div>
+                <div className="h-6 bg-surface-container-high rounded-lg overflow-hidden">
+                  <div
+                    className={`h-full rounded-lg transition-all duration-700 ${
+                      totalSpent > income.monthlyAmount ? 'bg-error' : 'bg-on-surface/20'
+                    }`}
+                    style={{
+                      width: `${Math.min((totalSpent / income.monthlyAmount) * 100, 100)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-outline-variant/20 flex items-center justify-between">
+                <span className="font-label-sm text-label-sm text-on-surface font-medium">
+                  {income.monthlyAmount >= totalSpent ? 'Monthly Surplus' : 'Monthly Deficit'}
+                </span>
+                <span className={`font-headline-md text-headline-md font-bold tabular-nums ${
+                  income.monthlyAmount >= totalSpent ? 'text-secondary' : 'text-error'
+                }`}>
+                  {income.monthlyAmount < totalSpent ? '-' : ''}{sym}
+                  {Math.abs(income.monthlyAmount - totalSpent).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </PageTransition>
