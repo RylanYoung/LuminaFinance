@@ -5,6 +5,7 @@ import { getSettings } from '../store/settings'
 import { useToast } from '../hooks/useToast'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
 import PageTransition from '../components/PageTransition'
+import CurrencyInput from '../components/CurrencyInput'
 
 export default function Income() {
   const session = getSession()!
@@ -17,7 +18,9 @@ export default function Income() {
   const [monthlyGoalInput, setMonthlyGoalInput] = useState(profile.monthlyGoal?.toString() ?? '')
   const [yearlyGoalInput, setYearlyGoalInput] = useState(profile.yearlyGoal?.toString() ?? '')
   const [incomeType, setIncomeType] = useState<'salary' | 'monthly'>(profile.type)
+  const [actions, setActions] = useState<string[]>(profile.actions ?? ['', '', ''])
   const [dirty, setDirty] = useState(false)
+  const [actionsDirty, setActionsDirty] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const animMonthly = useAnimatedNumber(profile.monthlyAmount)
@@ -53,11 +56,28 @@ export default function Income() {
       yearlyAmount: monthly * 12,
       monthlyGoal: monthlyGoalInput ? Number(monthlyGoalInput) : undefined,
       yearlyGoal: yearlyGoalInput ? Number(yearlyGoalInput) : undefined,
+      actions: profile.actions,
     }
     saveIncome(session.userId, updated)
     setProfile(updated)
     setDirty(false)
     toast.success('Income updated')
+  }
+
+  function handleSaveActions() {
+    const cleaned = actions.map(a => a.trim()).filter(a => a.length > 0)
+    const updated = { ...profile, actions: cleaned }
+    saveIncome(session.userId, updated)
+    setProfile(updated)
+    setActionsDirty(false)
+    toast.success('Income strategy saved')
+  }
+
+  function updateAction(i: number, val: string) {
+    const next = [...actions]
+    next[i] = val
+    setActions(next)
+    setActionsDirty(true)
   }
 
   const history = [...(profile.history ?? [])].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6)
@@ -164,19 +184,13 @@ export default function Income() {
             {/* Monthly amount */}
             <div>
               <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">
-                {incomeType === 'salary' ? 'Monthly Take-Home' : 'Monthly Earnings'} ({sym})
+                {incomeType === 'salary' ? 'Monthly Take-Home' : 'Monthly Earnings'}
               </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">{sym}</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={monthlyInput}
-                  onChange={e => { setMonthlyInput(e.target.value); setDirty(true) }}
-                  className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-                />
-              </div>
+              <CurrencyInput
+                sym={sym}
+                value={monthlyInput}
+                onChange={v => { setMonthlyInput(v); setDirty(true) }}
+              />
               {errors.monthly && <p className="text-error font-label-xs text-label-xs mt-1">{errors.monthly}</p>}
               {monthlyInput && !isNaN(Number(monthlyInput)) && (
                 <p className="font-label-xs text-label-xs text-on-surface-variant mt-1">
@@ -189,40 +203,28 @@ export default function Income() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">
-                  Monthly Goal ({sym})
+                  Monthly Goal
                 </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">{sym}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="Optional"
-                    value={monthlyGoalInput}
-                    onChange={e => { setMonthlyGoalInput(e.target.value); setDirty(true) }}
-                    className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-                  />
-                </div>
+                <CurrencyInput
+                  sym={sym}
+                  value={monthlyGoalInput}
+                  onChange={v => { setMonthlyGoalInput(v); setDirty(true) }}
+                  placeholder="Optional"
+                />
                 {errors.monthlyGoal && (
                   <p className="text-error font-label-xs text-label-xs mt-1">{errors.monthlyGoal}</p>
                 )}
               </div>
               <div>
                 <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">
-                  Yearly Goal ({sym})
+                  Yearly Goal
                 </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">{sym}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="Optional"
-                    value={yearlyGoalInput}
-                    onChange={e => { setYearlyGoalInput(e.target.value); setDirty(true) }}
-                    className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-                  />
-                </div>
+                <CurrencyInput
+                  sym={sym}
+                  value={yearlyGoalInput}
+                  onChange={v => { setYearlyGoalInput(v); setDirty(true) }}
+                  placeholder="Optional"
+                />
                 {errors.yearlyGoal && (
                   <p className="text-error font-label-xs text-label-xs mt-1">{errors.yearlyGoal}</p>
                 )}
@@ -235,6 +237,44 @@ export default function Income() {
                 className="w-full teal-gradient text-white py-3 rounded-lg font-label-sm text-label-sm shadow-ambient active:scale-95 transition-transform"
               >
                 Save Income
+              </button>
+            )}
+          </div>
+        </section>
+
+        {/* Income strategy */}
+        <section className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-ambient overflow-hidden">
+          <div className="px-6 py-4 border-b border-outline-variant/30">
+            <h3 className="font-headline-md text-headline-md text-on-surface">Income Strategy</h3>
+            <p className="font-label-xs text-label-xs text-on-surface-variant mt-0.5">
+              What are you doing to grow your income? (up to 3 — shown on Dashboard)
+            </p>
+          </div>
+          <div className="p-6 space-y-3">
+            {[0, 1, 2].map(i => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full teal-gradient flex items-center justify-center shrink-0">
+                  <span className="text-white font-bold" style={{ fontSize: 11 }}>{i + 1}</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder={
+                    i === 0 ? 'e.g. Freelancing on weekends'
+                    : i === 1 ? 'e.g. Learning a new skill'
+                    : 'e.g. Growing investment portfolio'
+                  }
+                  value={actions[i] ?? ''}
+                  onChange={e => updateAction(i, e.target.value)}
+                  className="flex-1 bg-surface-container rounded-lg px-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
+                />
+              </div>
+            ))}
+            {actionsDirty && (
+              <button
+                onClick={handleSaveActions}
+                className="w-full teal-gradient text-white py-3 rounded-lg font-label-sm text-label-sm shadow-ambient active:scale-95 transition-transform mt-2"
+              >
+                Save Strategy
               </button>
             )}
           </div>

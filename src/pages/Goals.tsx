@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getSession } from '../auth/session'
 import { getAssets, ASSET_META, ASSET_ORDER } from '../store/assets'
 import { getNetWorthGoal } from '../store/networthGoal'
+import { getIncome } from '../store/income'
 import { getSettings } from '../store/settings'
 import PageTransition from '../components/PageTransition'
 
@@ -14,6 +15,7 @@ export default function Goals() {
 
   const [assets] = useState(() => getAssets(session.userId))
   const [nwGoal] = useState(() => getNetWorthGoal(session.userId))
+  const [income] = useState(() => getIncome(session.userId))
 
   const totalNetWorth = assets.reduce((s, a) => s + a.currentValue, 0)
   const nwPct = nwGoal && nwGoal.targetAmount > 0
@@ -36,6 +38,76 @@ export default function Goals() {
           <p className="font-body-md text-body-md text-on-surface-variant">
             Track your progress across every asset and net worth target
           </p>
+        </div>
+
+        {/* Income goal — shown first */}
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-ambient">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="material-symbols-outlined text-[20px] text-secondary">payments</span>
+            <h3 className="font-headline-md text-headline-md text-on-surface">Income Goal</h3>
+          </div>
+          {income.monthlyGoal || income.yearlyGoal ? (
+            <div className="space-y-4">
+              {income.monthlyGoal && income.monthlyGoal > 0 && (
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-label-sm text-label-sm text-on-surface">Monthly</span>
+                    <span className="font-label-xs text-label-xs text-secondary font-bold">
+                      {Math.min((income.monthlyAmount / income.monthlyGoal) * 100, 100).toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-surface-container-high rounded-full h-2.5 mb-1.5">
+                    <div
+                      className="h-2.5 rounded-full teal-gradient transition-all duration-1000"
+                      style={{ width: `${Math.min((income.monthlyAmount / income.monthlyGoal) * 100, 100)}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-label-xs text-label-xs text-on-surface-variant tabular-nums">
+                      {sym}{income.monthlyAmount.toLocaleString()} / mo
+                    </span>
+                    <span className="font-label-xs text-label-xs text-on-surface-variant tabular-nums">
+                      Goal: {sym}{income.monthlyGoal.toLocaleString()} / mo
+                    </span>
+                  </div>
+                </div>
+              )}
+              {income.yearlyGoal && income.yearlyGoal > 0 && (
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-label-sm text-label-sm text-on-surface">Yearly</span>
+                    <span className="font-label-xs text-label-xs text-secondary font-bold">
+                      {Math.min((income.yearlyAmount / income.yearlyGoal) * 100, 100).toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-surface-container-high rounded-full h-2.5 mb-1.5">
+                    <div
+                      className="h-2.5 rounded-full teal-gradient transition-all duration-1000"
+                      style={{ width: `${Math.min((income.yearlyAmount / income.yearlyGoal) * 100, 100)}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-label-xs text-label-xs text-on-surface-variant tabular-nums">
+                      {sym}{income.yearlyAmount.toLocaleString()} / yr
+                    </span>
+                    <span className="font-label-xs text-label-xs text-on-surface-variant tabular-nums">
+                      Goal: {sym}{income.yearlyGoal.toLocaleString()} / yr
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <p className="font-body-md text-body-md text-on-surface-variant">No income goal set yet</p>
+              <button
+                onClick={() => navigate('/income')}
+                className="font-label-sm text-label-sm text-secondary hover:underline"
+              >
+                Set Goal →
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Net worth goal */}

@@ -21,6 +21,7 @@ export default function Dashboard() {
   const [goal] = useState(() => getNetWorthGoal(session.userId))
   const [totalExpenses] = useState(() => getTotalMonthlyExpenses(session.userId))
   const [categories] = useState(() => getBudgetCategories(session.userId))
+  const incomeActions = (income.actions ?? []).filter(a => a.trim().length > 0)
 
   const animNetWorth = useAnimatedNumber(netWorth)
   const animIncome = useAnimatedNumber(income.monthlyAmount)
@@ -178,6 +179,34 @@ export default function Dashboard() {
             })}
           </div>
         </div>
+
+        {/* Income Strategy */}
+        {incomeActions.length > 0 && (
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-ambient">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px] text-secondary">rocket_launch</span>
+                <h3 className="font-headline-md text-headline-md text-on-surface">Income Strategy</h3>
+              </div>
+              <button
+                onClick={() => navigate('/income')}
+                className="font-label-xs text-label-xs text-secondary hover:underline"
+              >
+                Edit →
+              </button>
+            </div>
+            <div className="space-y-2">
+              {incomeActions.map((action, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded-full teal-gradient flex items-center justify-center shrink-0">
+                    <span className="text-white font-bold" style={{ fontSize: 10 }}>{i + 1}</span>
+                  </div>
+                  <p className="font-body-md text-body-md text-on-surface">{action}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Budget Health */}
         <div>

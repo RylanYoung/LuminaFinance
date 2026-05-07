@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { getSession } from '../auth/session'
+import CurrencyInput from '../components/CurrencyInput'
 import { getSettings, saveSettings } from '../store/settings'
 import { exportAllData, importAllData } from '../store/exportData'
 import { getUsers } from '../auth/users'
@@ -137,22 +138,14 @@ export default function Settings() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">
-                  Target Amount ({settings.currencySymbol})
+                  Target Amount
                 </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                    {settings.currencySymbol}
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1000"
-                    placeholder="e.g. 1000000"
-                    value={goalAmount}
-                    onChange={e => { setGoalAmount(e.target.value); setGoalDirty(true) }}
-                    className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-                  />
-                </div>
+                <CurrencyInput
+                  sym={settings.currencySymbol}
+                  value={goalAmount}
+                  onChange={v => { setGoalAmount(v); setGoalDirty(true) }}
+                  placeholder="e.g. 1000000"
+                />
               </div>
               <div>
                 <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">

@@ -22,6 +22,7 @@ export interface IncomeProfile {
   yearlyAmount: number
   monthlyGoal?: number
   yearlyGoal?: number
+  actions?: string[]
   history: { date: string; monthlyAmount: number }[]
 }
 

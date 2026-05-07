@@ -7,6 +7,7 @@ import {
 import { getSettings } from '../store/settings'
 import { useToast } from '../hooks/useToast'
 import PageTransition from '../components/PageTransition'
+import CurrencyInput from '../components/CurrencyInput'
 import type { AssetAccount, AssetType } from '../store/types'
 
 interface AssetModalProps {
@@ -93,43 +94,17 @@ function AssetModal({ type, existing, sym, onSave, onClose }: AssetModalProps) {
 
           <div>
             <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">
-              Current Value ({sym})
+              Current Value
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                {sym}
-              </span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                value={value}
-                onChange={e => setValue(e.target.value)}
-                className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-              />
-            </div>
+            <CurrencyInput sym={sym} value={value} onChange={setValue} placeholder="0.00" />
             {errors.value && <p className="text-error font-label-xs text-label-xs mt-1">{errors.value}</p>}
           </div>
 
           <div>
             <label className="font-label-xs text-label-xs text-on-surface-variant uppercase mb-1 block">
-              Goal Value ({sym}) — optional
+              Goal Value — optional
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                {sym}
-              </span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                value={goal}
-                onChange={e => setGoal(e.target.value)}
-                className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-              />
-            </div>
+            <CurrencyInput sym={sym} value={goal} onChange={setGoal} placeholder="0.00" />
             {errors.goal && <p className="text-error font-label-xs text-label-xs mt-1">{errors.goal}</p>}
           </div>
 
@@ -195,18 +170,7 @@ function UpdateValueModal({ account, sym, onSave, onClose }: UpdateValueModalPro
           {account.name} · {meta.label}
         </p>
 
-        <div className="relative mb-2">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">{sym}</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            autoFocus
-            className="w-full bg-surface-container rounded-lg pl-8 pr-4 py-3 font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/30"
-          />
-        </div>
+        <CurrencyInput sym={sym} value={value} onChange={setValue} autoFocus className="mb-2" />
 
         {!isNaN(Number(value)) && Number(value) !== account.currentValue && (
           <p className={`font-label-xs text-label-xs mb-4 ${diff >= 0 ? 'text-secondary' : 'text-error'}`}>
