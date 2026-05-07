@@ -7,6 +7,7 @@ import { getNetWorthGoal } from '../store/networthGoal'
 import { getTotalMonthlyExpenses, getBudgetCategories } from '../store/budget'
 import { getSettings } from '../store/settings'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { useMounted } from '../hooks/useMounted'
 import PageTransition from '../components/PageTransition'
 
 export default function Dashboard() {
@@ -26,6 +27,7 @@ export default function Dashboard() {
   const animNetWorth = useAnimatedNumber(netWorth)
   const animIncome = useAnimatedNumber(income.monthlyAmount)
   const animExpenses = useAnimatedNumber(totalExpenses)
+  const mounted = useMounted()
 
   const goalPct = goal && goal.targetAmount > 0
     ? Math.min((netWorth / goal.targetAmount) * 100, 100)
@@ -43,7 +45,7 @@ export default function Dashboard() {
 
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-6xl mx-auto pb-12 space-y-section-margin">
+      <div className="p-container-padding max-w-6xl mx-auto pb-12 space-y-section-margin anim-stagger">
         {/* Header */}
         <div className="pt-2">
           <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">
@@ -72,8 +74,8 @@ export default function Dashboard() {
               </div>
               <div className="w-full bg-white/20 rounded-full h-2">
                 <div
-                  className="bg-white rounded-full h-2 transition-all duration-1000"
-                  style={{ width: `${goalPct}%` }}
+                  className="bg-white rounded-full h-2 transition-all duration-700"
+                  style={{ width: `${mounted ? goalPct : 0}%` }}
                 />
               </div>
             </div>
@@ -252,7 +254,7 @@ export default function Dashboard() {
                             className={`h-1.5 rounded-full transition-all duration-700 ${
                               over ? 'bg-error' : warn ? 'bg-amber-400' : 'bg-secondary'
                             }`}
-                            style={{ width: `${pct}%` }}
+                            style={{ width: `${mounted ? pct : 0}%` }}
                           />
                         </div>
                       )}

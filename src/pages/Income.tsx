@@ -4,6 +4,7 @@ import { getIncome, saveIncome } from '../store/income'
 import { getSettings } from '../store/settings'
 import { useToast } from '../hooks/useToast'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { useMounted } from '../hooks/useMounted'
 import PageTransition from '../components/PageTransition'
 import CurrencyInput from '../components/CurrencyInput'
 
@@ -25,6 +26,7 @@ export default function Income() {
 
   const animMonthly = useAnimatedNumber(profile.monthlyAmount)
   const animYearly = useAnimatedNumber(profile.yearlyAmount)
+  const mounted = useMounted()
 
   const monthlyGoalPct = profile.monthlyGoal && profile.monthlyGoal > 0
     ? Math.min((profile.monthlyAmount / profile.monthlyGoal) * 100, 100)
@@ -84,7 +86,7 @@ export default function Income() {
 
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-3xl mx-auto pb-12 space-y-section-margin">
+      <div className="p-container-padding max-w-3xl mx-auto pb-12 space-y-section-margin anim-stagger">
         {/* Header */}
         <div className="pt-2">
           <h2 className="font-headline-lg text-headline-lg text-on-surface">Income</h2>
@@ -123,7 +125,7 @@ export default function Income() {
                 <div className="w-full bg-surface-container-high rounded-full h-2 mb-2">
                   <div
                     className="h-2 rounded-full teal-gradient transition-all duration-1000"
-                    style={{ width: `${monthlyGoalPct}%` }}
+                    style={{ width: `${mounted ? monthlyGoalPct : 0}%` }}
                   />
                 </div>
                 <p className="font-label-xs text-label-xs text-on-surface-variant">
@@ -142,7 +144,7 @@ export default function Income() {
                 <div className="w-full bg-surface-container-high rounded-full h-2 mb-2">
                   <div
                     className="h-2 rounded-full teal-gradient transition-all duration-1000"
-                    style={{ width: `${yearlyGoalPct}%` }}
+                    style={{ width: `${mounted ? yearlyGoalPct : 0}%` }}
                   />
                 </div>
                 <p className="font-label-xs text-label-xs text-on-surface-variant">

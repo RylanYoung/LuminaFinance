@@ -4,6 +4,8 @@ import { getBudgetCategories, saveBudgetCategories } from '../store/budget'
 import { getIncome } from '../store/income'
 import { getSettings } from '../store/settings'
 import { useToast } from '../hooks/useToast'
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { useMounted } from '../hooks/useMounted'
 import PageTransition from '../components/PageTransition'
 import type { BudgetCategory } from '../store/types'
 
@@ -29,6 +31,12 @@ export default function Budget() {
   const totalSpent = categories.reduce((s, c) => s + c.monthlySpent, 0)
   const monthlyIncome = income.monthlyAmount
   const surplus = monthlyIncome - totalSpent
+
+  const animIncome = useAnimatedNumber(monthlyIncome)
+  const animSpent = useAnimatedNumber(totalSpent)
+  const animSurplus = useAnimatedNumber(Math.abs(surplus))
+  const animBudget = useAnimatedNumber(totalBudget)
+  const mounted = useMounted()
 
   function startEdit(cat: BudgetCategory, field: 'budget' | 'spent') {
     setEditing({
@@ -68,7 +76,7 @@ export default function Budget() {
 
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-4xl mx-auto pb-12 space-y-section-margin">
+      <div className="p-container-padding max-w-4xl mx-auto pb-12 space-y-section-margin anim-stagger">
         {/* Header */}
         <div className="pt-2">
           <h2 className="font-headline-lg text-headline-lg text-on-surface">Monthly Budget</h2>
@@ -85,13 +93,13 @@ export default function Budget() {
             <div>
               <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Income</p>
               <p className="font-headline-md text-headline-md text-secondary font-bold tabular-nums">
-                {sym}{monthlyIncome.toLocaleString()}
+                {sym}{Math.round(animIncome).toLocaleString()}
               </p>
             </div>
             <div>
               <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Spent</p>
               <p className="font-headline-md text-headline-md text-on-surface font-bold tabular-nums">
-                {sym}{totalSpent.toLocaleString()}
+                {sym}{Math.round(animSpent).toLocaleString()}
               </p>
             </div>
             <div>
@@ -101,7 +109,7 @@ export default function Budget() {
               <p className={`font-headline-md text-headline-md font-bold tabular-nums ${
                 surplus >= 0 ? 'text-secondary' : 'text-error'
               }`}>
-                {surplus < 0 ? '-' : ''}{sym}{Math.abs(surplus).toLocaleString()}
+                {surplus < 0 ? '-' : ''}{sym}{Math.round(animSurplus).toLocaleString()}
               </p>
             </div>
           </div>
@@ -123,7 +131,7 @@ export default function Budget() {
                   className={`h-3 rounded-full transition-all duration-700 ${
                     budgetPct >= 100 ? 'bg-error' : budgetPct >= 85 ? 'bg-amber-400' : 'teal-gradient'
                   }`}
-                  style={{ width: `${budgetPct}%` }}
+                  style={{ width: `${mounted ? budgetPct : 0}%` }}
                 />
               </div>
             </div>
@@ -183,7 +191,7 @@ export default function Budget() {
                               className={`h-1.5 rounded-full transition-all duration-700 ${
                                 over ? 'bg-error' : warn ? 'bg-amber-400' : 'bg-secondary'
                               }`}
-                              style={{ width: `${pct}%` }}
+                              style={{ width: `${mounted ? pct : 0}%` }}
                             />
                           </div>
                         </div>
@@ -284,7 +292,7 @@ export default function Budget() {
               <div>
                 <p className="font-label-xs text-label-xs text-on-surface-variant">Budget</p>
                 <p className="font-label-sm text-label-sm text-on-surface font-semibold tabular-nums">
-                  {sym}{totalBudget.toLocaleString()}
+                  {sym}{Math.round(animBudget).toLocaleString()}
                 </p>
               </div>
               <div>
@@ -292,7 +300,7 @@ export default function Budget() {
                 <p className={`font-label-sm text-label-sm font-semibold tabular-nums ${
                   totalBudget > 0 && totalSpent > totalBudget ? 'text-error' : 'text-on-surface'
                 }`}>
-                  {sym}{totalSpent.toLocaleString()}
+                  {sym}{Math.round(animSpent).toLocaleString()}
                 </p>
               </div>
             </div>

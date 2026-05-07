@@ -5,6 +5,8 @@ import { getAssets, ASSET_META, ASSET_ORDER } from '../store/assets'
 import { getNetWorthGoal } from '../store/networthGoal'
 import { getIncome } from '../store/income'
 import { getSettings } from '../store/settings'
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { useMounted } from '../hooks/useMounted'
 import PageTransition from '../components/PageTransition'
 
 export default function Goals() {
@@ -18,6 +20,8 @@ export default function Goals() {
   const [income] = useState(() => getIncome(session.userId))
 
   const totalNetWorth = assets.reduce((s, a) => s + a.currentValue, 0)
+  const animNetWorth = useAnimatedNumber(totalNetWorth)
+  const mounted = useMounted()
   const nwPct = nwGoal && nwGoal.targetAmount > 0
     ? Math.min((totalNetWorth / nwGoal.targetAmount) * 100, 100)
     : null
@@ -31,7 +35,7 @@ export default function Goals() {
 
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-4xl mx-auto pb-12 space-y-section-margin">
+      <div className="p-container-padding max-w-4xl mx-auto pb-12 space-y-section-margin anim-stagger">
         {/* Header */}
         <div className="pt-2">
           <h2 className="font-headline-lg text-headline-lg text-on-surface">Goals</h2>
@@ -48,7 +52,7 @@ export default function Goals() {
               <div className="flex items-end justify-between mb-3">
                 <div>
                   <p className="font-display-xl text-display-xl tabular-nums">
-                    {sym}{totalNetWorth.toLocaleString()}
+                    {sym}{Math.round(animNetWorth).toLocaleString()}
                   </p>
                   <p className="text-white/70 font-label-xs text-label-xs mt-1">
                     of {sym}{nwGoal.targetAmount.toLocaleString()} goal
@@ -64,8 +68,8 @@ export default function Goals() {
               </div>
               <div className="w-full bg-white/20 rounded-full h-3">
                 <div
-                  className="bg-white rounded-full h-3 transition-all duration-1000"
-                  style={{ width: `${nwPct}%` }}
+                  className="bg-white rounded-full h-3 transition-all duration-700"
+                  style={{ width: `${mounted ? nwPct : 0}%` }}
                 />
               </div>
               <p className="text-white/60 font-label-xs text-label-xs mt-2">
@@ -104,7 +108,7 @@ export default function Goals() {
                   <div className="w-full bg-surface-container-high rounded-full h-2.5 mb-1.5">
                     <div
                       className="h-2.5 rounded-full teal-gradient transition-all duration-1000"
-                      style={{ width: `${Math.min((income.monthlyAmount / income.monthlyGoal) * 100, 100)}%` }}
+                      style={{ width: `${mounted ? Math.min((income.monthlyAmount / income.monthlyGoal) * 100, 100) : 0}%` }}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -128,7 +132,7 @@ export default function Goals() {
                   <div className="w-full bg-surface-container-high rounded-full h-2.5 mb-1.5">
                     <div
                       className="h-2.5 rounded-full teal-gradient transition-all duration-1000"
-                      style={{ width: `${Math.min((income.yearlyAmount / income.yearlyGoal) * 100, 100)}%` }}
+                      style={{ width: `${mounted ? Math.min((income.yearlyAmount / income.yearlyGoal) * 100, 100) : 0}%` }}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -167,7 +171,7 @@ export default function Goals() {
             <div className="w-full bg-surface-container-high rounded-full h-2.5 mb-2">
               <div
                 className="h-2.5 rounded-full teal-gradient transition-all duration-1000"
-                style={{ width: `${overallPct}%` }}
+                style={{ width: `${mounted ? overallPct : 0}%` }}
               />
             </div>
             <div className="flex justify-between">
@@ -240,7 +244,7 @@ export default function Goals() {
                         <div
                           className="h-3 rounded-full transition-all duration-1000"
                           style={{
-                            width: `${pct}%`,
+                            width: `${mounted ? pct : 0}%`,
                             backgroundColor: over ? '#006a61' : meta.color,
                           }}
                         />

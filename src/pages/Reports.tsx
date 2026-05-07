@@ -3,6 +3,8 @@ import { getNetWorthHistory, getTotalByType, ASSET_META, ASSET_ORDER } from '../
 import { getIncome } from '../store/income'
 import { getBudgetCategories, getTotalMonthlyExpenses } from '../store/budget'
 import { getSettings } from '../store/settings'
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { useMounted } from '../hooks/useMounted'
 import PageTransition from '../components/PageTransition'
 
 // ---- SVG Line Chart ----
@@ -211,6 +213,7 @@ function BudgetBars({
   categories: { name: string; color: string; icon: string; monthlyBudget: number; monthlySpent: number }[]
   sym: string
 }) {
+  const barMounted = useMounted()
   const active = categories.filter(c => c.monthlyBudget > 0 || c.monthlySpent > 0)
   if (active.length === 0) {
     return (
@@ -246,12 +249,12 @@ function BudgetBars({
               {cat.monthlyBudget > 0 && (
                 <div
                   className="absolute top-0 left-0 h-full rounded-full opacity-30 transition-all duration-700"
-                  style={{ width: `${budgetPct}%`, backgroundColor: cat.color }}
+                  style={{ width: `${barMounted ? budgetPct : 0}%`, backgroundColor: cat.color }}
                 />
               )}
               <div
                 className="absolute top-0 left-0 h-full rounded-full transition-all duration-700"
-                style={{ width: `${spentPct}%`, backgroundColor: over ? '#ba1a1a' : cat.color }}
+                style={{ width: `${barMounted ? spentPct : 0}%`, backgroundColor: over ? '#ba1a1a' : cat.color }}
               />
             </div>
           </div>
@@ -286,9 +289,15 @@ export default function Reports() {
 
   const currentNetWorth = history.length > 0 ? history[history.length - 1].value : 0
 
+  const animNetWorth = useAnimatedNumber(currentNetWorth)
+  const animChange = useAnimatedNumber(Math.abs(netWorthChange))
+  const animIncome = useAnimatedNumber(income.monthlyAmount)
+  const animSpent = useAnimatedNumber(totalSpent)
+  const mounted = useMounted()
+
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-5xl mx-auto pb-12 space-y-section-margin">
+      <div className="p-container-padding max-w-5xl mx-auto pb-12 space-y-section-margin anim-stagger">
         {/* Header */}
         <div className="pt-2">
           <h2 className="font-headline-lg text-headline-lg text-on-surface">Reports</h2>
@@ -302,7 +311,7 @@ export default function Reports() {
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-ambient">
             <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Net Worth</p>
             <p className="font-headline-md text-headline-md text-on-surface font-bold tabular-nums">
-              {sym}{currentNetWorth.toLocaleString()}
+              {sym}{Math.round(animNetWorth).toLocaleString()}
             </p>
           </div>
           <div className={`border rounded-xl p-4 shadow-ambient ${
@@ -314,19 +323,19 @@ export default function Reports() {
             <p className={`font-headline-md text-headline-md font-bold tabular-nums ${
               netWorthChange >= 0 ? 'text-secondary' : 'text-error'
             }`}>
-              {netWorthChange >= 0 ? '+' : ''}{sym}{netWorthChange.toLocaleString()}
+              {netWorthChange >= 0 ? '+' : ''}{sym}{Math.round(animChange).toLocaleString()}
             </p>
           </div>
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-ambient">
             <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Monthly Income</p>
             <p className="font-headline-md text-headline-md text-secondary font-bold tabular-nums">
-              {sym}{income.monthlyAmount.toLocaleString()}
+              {sym}{Math.round(animIncome).toLocaleString()}
             </p>
           </div>
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-ambient">
             <p className="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest mb-1">Monthly Expenses</p>
             <p className="font-headline-md text-headline-md text-on-surface font-bold tabular-nums">
-              {sym}{totalSpent.toLocaleString()}
+              {sym}{Math.round(animSpent).toLocaleString()}
             </p>
           </div>
         </div>
@@ -401,7 +410,7 @@ export default function Reports() {
                       totalSpent > income.monthlyAmount ? 'bg-error' : 'bg-on-surface/20'
                     }`}
                     style={{
-                      width: `${Math.min((totalSpent / income.monthlyAmount) * 100, 100)}%`,
+                      width: `${mounted ? Math.min((totalSpent / income.monthlyAmount) * 100, 100) : 0}%`,
                     }}
                   />
                 </div>

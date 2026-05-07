@@ -6,6 +6,8 @@ import {
 } from '../store/assets'
 import { getSettings } from '../store/settings'
 import { useToast } from '../hooks/useToast'
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { useMounted } from '../hooks/useMounted'
 import PageTransition from '../components/PageTransition'
 import CurrencyInput from '../components/CurrencyInput'
 import type { AssetAccount, AssetType } from '../store/types'
@@ -210,6 +212,7 @@ export default function Portfolio() {
   const [editAccount, setEditAccount] = useState<AssetAccount | null>(null)
   const [updateAccount, setUpdateAccount] = useState<AssetAccount | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<AssetAccount | null>(null)
+  const [newItemId, setNewItemId] = useState<string | null>(null)
 
   const totalNetWorth = assets.reduce((s, a) => s + a.currentValue, 0)
 
@@ -219,8 +222,15 @@ export default function Portfolio() {
 
   function handleAdd(data: Omit<AssetAccount, 'id' | 'history' | 'lastUpdated'> | AssetAccount) {
     if ('id' in data) return
+    const prevIds = new Set(assets.map(a => a.id))
     addAsset(session.userId, data as Omit<AssetAccount, 'id' | 'history' | 'lastUpdated'>)
-    refresh()
+    const next = getAssets(session.userId)
+    setAssets(next)
+    const added = next.find(a => !prevIds.has(a.id))
+    if (added) {
+      setNewItemId(added.id)
+      setTimeout(() => setNewItemId(null), 700)
+    }
     setAddModal(false)
     toast.success('Account added')
   }
@@ -252,15 +262,19 @@ export default function Portfolio() {
   const typeTotal = typeAssets.reduce((s, a) => s + a.currentValue, 0)
   const typeGoalTotal = typeAssets.reduce((s, a) => s + (a.goalValue ?? 0), 0)
 
+  const animNetWorth = useAnimatedNumber(totalNetWorth)
+  const animTypeTotal = useAnimatedNumber(typeTotal)
+  const mounted = useMounted()
+
   return (
     <PageTransition>
-      <div className="p-container-padding max-w-5xl mx-auto pb-12 space-y-section-margin">
+      <div className="p-container-padding max-w-5xl mx-auto pb-12 space-y-section-margin anim-stagger">
         {/* Header */}
         <div className="pt-2 flex items-start justify-between">
           <div>
             <h2 className="font-headline-lg text-headline-lg text-on-surface">Asset Portfolio</h2>
             <p className="font-body-md text-body-md text-on-surface-variant">
-              Total: {sym}{totalNetWorth.toLocaleString()}
+              Total: {sym}{Math.round(animNetWorth).toLocaleString()}
             </p>
           </div>
           <button
@@ -321,7 +335,7 @@ export default function Portfolio() {
             </div>
             <div className="text-right">
               <p className="font-headline-md text-headline-md text-on-surface font-bold tabular-nums">
-                {sym}{typeTotal.toLocaleString()}
+                {sym}{Math.round(animTypeTotal).toLocaleString()}
               </p>
               {typeGoalTotal > 0 && (
                 <p className="font-label-xs text-label-xs text-on-surface-variant">
@@ -362,7 +376,7 @@ export default function Portfolio() {
                 return (
                   <div
                     key={account.id}
-                    className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-ambient"
+                    className={`bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-ambient${account.id === newItemId ? ' anim-new-item' : ''}`}
                   >
                     <div className="flex items-start justify-between gap-4 mb-3">
                       <div className="flex-1 min-w-0">
@@ -397,7 +411,7 @@ export default function Portfolio() {
                         <div className="w-full bg-surface-container-high rounded-full h-2">
                           <div
                             className="h-2 rounded-full transition-all duration-700"
-                            style={{ width: `${pct}%`, backgroundColor: meta.color }}
+                            style={{ width: `${mounted ? pct : 0}%`, backgroundColor: meta.color }}
                           />
                         </div>
                       </div>

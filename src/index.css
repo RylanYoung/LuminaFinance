@@ -76,3 +76,40 @@
 }
 
 /* Skeleton pulse is handled by Tailwind's animate-pulse */
+
+/* Stagger entrance animations */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInNew {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.anim-stagger > * {
+  animation: fadeSlideUp 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-stagger > *:nth-child(1)  { animation-delay: 0ms; }
+.anim-stagger > *:nth-child(2)  { animation-delay: 75ms; }
+.anim-stagger > *:nth-child(3)  { animation-delay: 150ms; }
+.anim-stagger > *:nth-child(4)  { animation-delay: 225ms; }
+.anim-stagger > *:nth-child(5)  { animation-delay: 300ms; }
+.anim-stagger > *:nth-child(6)  { animation-delay: 375ms; }
+.anim-stagger > *:nth-child(7)  { animation-delay: 450ms; }
+.anim-stagger > *:nth-child(8)  { animation-delay: 525ms; }
+.anim-stagger > *:nth-child(9)  { animation-delay: 600ms; }
+
+.anim-new-item {
+  animation: slideInNew 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
